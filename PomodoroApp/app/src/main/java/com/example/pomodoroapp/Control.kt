@@ -22,7 +22,10 @@ class Control : AppCompatActivity() {
             val adapter = MyAdapter(this, supportFragmentManager,
                 tabLayout.tabCount)
             viewPager.adapter = adapter
-            viewPager.currentItem = 1;
+            // set default page
+            viewPager.setCurrentItem(1, true)
+            tabLayout.getTabAt(1)?.select();
+
             viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
             tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab) {
@@ -31,6 +34,5 @@ class Control : AppCompatActivity() {
                 override fun onTabUnselected(tab: TabLayout.Tab) {}
                 override fun onTabReselected(tab: TabLayout.Tab) {}
             })
-
     }
 }
