@@ -1,8 +1,10 @@
-package com.example.pomodoroapp
+package com.example.pomodoroapp.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.viewpager.widget.ViewPager
+import com.example.pomodoroapp.ui.tabs.MyAdapter
+import com.example.pomodoroapp.R
 import com.google.android.material.tabs.TabLayout
 
 class Control : AppCompatActivity() {

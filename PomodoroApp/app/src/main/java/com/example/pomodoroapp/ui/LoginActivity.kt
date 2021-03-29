@@ -1,4 +1,4 @@
-package com.example.pomodoroapp
+package com.example.pomodoroapp.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,7 +7,8 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.pomodoroapp.tabs.PomodoroTimer
+import com.example.pomodoroapp.R
+import com.example.pomodoroapp.ui.tabs.PomodoroTimer
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.acitvity_login.*
@@ -67,13 +68,10 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(applicationContext, "Authentication succeeded", Toast.LENGTH_LONG).show()
                     val currentUser = auth!!.currentUser
                     Log.d("Login:", currentUser.uid)
-
-                    val intent = Intent(this, PomodoroTimer::class.java).apply {
+                    val intent = Intent(this, Control::class.java).apply {
                         putExtra(EXTRA_MESSAGE, currentUser)
                     }
                     startActivity(intent)
-
-
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.exception)

@@ -1,13 +1,13 @@
-package com.example.pomodoroapp
+package com.example.pomodoroapp.ui.tabs
 
 import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.example.pomodoroapp.tabs.MainTasks
-import com.example.pomodoroapp.tabs.MinorTasks
-import com.example.pomodoroapp.tabs.MyAccount
-import com.example.pomodoroapp.tabs.PomodoroTimer
+import com.example.pomodoroapp.ui.tabs.MainTasks
+import com.example.pomodoroapp.ui.tabs.MinorTasks
+import com.example.pomodoroapp.ui.tabs.MyAccount
+import com.example.pomodoroapp.ui.tabs.PomodoroTimer
 
 @Suppress("DEPRECATION")
 internal class MyAdapter(

@@ -1,4 +1,4 @@
-package com.example.pomodoroapp.tabs
+package com.example.pomodoroapp.ui.tabs
 
 import android.os.Bundle
 import android.view.LayoutInflater
