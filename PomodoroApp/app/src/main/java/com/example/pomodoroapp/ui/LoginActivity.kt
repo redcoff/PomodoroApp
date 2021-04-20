@@ -1,14 +1,15 @@
 package com.example.pomodoroapp.ui
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.provider.AlarmClock.EXTRA_MESSAGE
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pomodoroapp.R
-import com.example.pomodoroapp.ui.tabs.PomodoroTimer
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.acitvity_login.*
@@ -41,7 +42,23 @@ class LoginActivity : AppCompatActivity() {
     fun buLoginEvent(view: View) {
         val email = etEmail.text.toString()
         val password = etPassword.text.toString()
-        signIn(email, password)
+        if (email.isEmpty() || password.isEmpty()){
+            val dlgAlert: AlertDialog.Builder = AlertDialog.Builder(this)
+            dlgAlert.setMessage("Špatné přihlašovací údaje")
+            dlgAlert.setTitle("Vyplňte email i heslo")
+            dlgAlert.setPositiveButton("OK", null)
+            dlgAlert.setCancelable(true)
+            dlgAlert.create().show()
+        }else if(!TextUtils.isEmpty(email) && !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            val dlgAlert: AlertDialog.Builder = AlertDialog.Builder(this)
+            dlgAlert.setMessage("Špatný formát emailu")
+            dlgAlert.setTitle("Chyba přihlášení")
+            dlgAlert.setPositiveButton("OK", null)
+            dlgAlert.setCancelable(true)
+            dlgAlert.create().show()
+        }else{
+            signIn(email, password)
+        }
     }
 
     private fun createAccount(email: String, password: String) {
@@ -65,7 +82,11 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
-                    Toast.makeText(applicationContext, "Authentication succeeded", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        applicationContext,
+                        "Authentication succeeded",
+                        Toast.LENGTH_LONG
+                    ).show()
                     val currentUser = auth!!.currentUser
                     Log.d("Login:", currentUser.uid)
                     val intent = Intent(this, Control::class.java).apply {
