@@ -1,7 +1,12 @@
 <resources>
     <string name="app_name">PomodoroApp</string>
     <string name="timer_icon">Timer icon</string>
-    <string name="start_pomodoro">Spustit_pomodoro</string>
+    <string name="start_pomodoro">Spustit pomodoro</string>
     <string name="minutes">25 minutes</string>
     <string name="user">Uživatel</string>
+    <string name="stop_pomodoro">Zastavit pomodoro</string>
+    <string name="zapsat_ukol">Zapsat úkol</string>
+    <string name="zbyva">Zbývá</string>
+    <string name="neodkladn">Neodkladné</string>
+    <string name="odkladn">Odkladné</string>
 </resources>
