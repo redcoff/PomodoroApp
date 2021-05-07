@@ -1,9 +1,12 @@
 package com.example.pomodoroapp.model
 
+import com.google.firebase.Timestamp
 import java.util.*
 
-data class MainTask(val pomodoros:Int, val description:String, val date:Date, override var name: String,
-                    override var id: Int
-): Task() {
-
-}
+data class MainTask(
+    val name:String = "",
+    val uid: String = "",
+    val pomodoros:Int = 0,
+    val description:String = "",
+    val date:Timestamp? = null,
+)

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<data>
+    <variable
+        name="name"
+        type="String" />
+</data>
+
+<androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="96dp"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:layout_marginTop="12dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:id="@+id/card_items"
+    card_view:cardBackgroundColor="#FFFF"
+    card_view:cardCornerRadius="8dp"
+    card_view:contentPadding="10dp"
+    android:foreground="?selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true" >
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/task_image"
+            android:layout_width="181dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/app_name"
+            android:contentDescription="TODO" />
+
+        <TextView
+            android:id="@+id/task_text"
+            style="@style/task_title"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/app_name"
+            android:gravity="end|center_vertical"/>
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>
+</layout>

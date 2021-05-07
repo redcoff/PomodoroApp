@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_my_account.*
 import kotlinx.android.synthetic.main.activity_my_account.view.*
 import kotlin.math.log
 
-class MyAccount : Fragment() {
+class MyAccountFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(

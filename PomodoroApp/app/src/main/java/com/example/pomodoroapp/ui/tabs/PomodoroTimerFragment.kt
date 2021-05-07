@@ -12,7 +12,7 @@ import com.example.pomodoroapp.R
 import com.google.android.material.button.MaterialButton
 import kotlinx.android.synthetic.main.activity_pomodorotimer.view.*
 
-class PomodoroTimer : Fragment() {
+class PomodoroTimerFragment : Fragment() {
     private var counter = 25*60
     private var running = false
     private lateinit var timer: CountDownTimer

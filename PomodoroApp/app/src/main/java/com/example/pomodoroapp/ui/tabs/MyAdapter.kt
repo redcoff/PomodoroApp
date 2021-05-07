@@ -4,10 +4,6 @@ import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.example.pomodoroapp.ui.tabs.MainTasks
-import com.example.pomodoroapp.ui.tabs.MinorTasks
-import com.example.pomodoroapp.ui.tabs.MyAccount
-import com.example.pomodoroapp.ui.tabs.PomodoroTimer
 
 @Suppress("DEPRECATION")
 internal class MyAdapter(
@@ -19,16 +15,16 @@ internal class MyAdapter(
     override fun getItem(position: Int): Fragment {
         return when (position) {
             0 -> {
-                MyAccount()
+                MyAccountFragment()
             }
             1 -> {
-               PomodoroTimer()
+               PomodoroTimerFragment()
             }
             2 -> {
-                MainTasks()
+                MainTasksFragment()
             }
             3 -> {
-                MinorTasks()
+                MinorTasksFragment()
             }
             else -> getItem(position)
         }
@@ -36,4 +32,6 @@ internal class MyAdapter(
     override fun getCount(): Int {
         return totalTabs
     }
+
+
 }

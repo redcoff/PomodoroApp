@@ -10,14 +10,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.ListAdapter
-import androidx.room.Dao
 import com.example.pomodoroapp.R
 import com.example.pomodoroapp.model.MinorTask
 import com.example.pomodoroapp.model.User
 import com.example.pomodoroapp.utilities.minorTasks.MinorTasksAdapter
 import kotlinx.android.synthetic.main.activity_minor_tasks.view.*
 
-class MinorTasks : Fragment() {
+class MinorTasksFragment : Fragment() {
 
     private var adapter: MinorTasksAdapter? = MinorTasksAdapter()
     private var list: ArrayList<MinorTask>? = null
@@ -32,8 +31,6 @@ class MinorTasks : Fragment() {
         view.recycleView.adapter = adapter
 
         return view
-
-
 
     }
 

@@ -9,4 +9,10 @@
     <string name="zbyva">Zbývá</string>
     <string name="neodkladn">Neodkladné</string>
     <string name="odkladn">Odkladné</string>
+    <string name="add_task">Add task</string>
+    <string name="bad_login">Špatné přihlašovací údaje</string>
+    <string name="add_credentials">Vyplňte email a heslo.</string>
+    <string name="OK">OK</string>
+    <string name="bad_email_format">Špatný formát emailu.</string>
+    <string name="login_error">Chyba přihlášení.</string>
 </resources>

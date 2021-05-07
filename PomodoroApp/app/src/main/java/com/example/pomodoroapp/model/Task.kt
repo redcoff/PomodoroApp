@@ -1,6 +1,7 @@
 package com.example.pomodoroapp.model
 
-abstract class Task{
-    abstract var name:String
-    abstract var id: Int
+class Task{
+     var name:String = ""
+     var id: Int = -1
+     var uid: Int = -1
 }
