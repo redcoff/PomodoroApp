@@ -21,6 +21,7 @@ class MainTasksFragment : Fragment() {
     private val mainTaskViewModel: MainTaskViewModel by viewModels()
 
     private var _binding: ActivityMainTasksBinding? = null
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -37,15 +38,30 @@ class MainTasksFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?){
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-       binding.recyclerview.apply {
+        binding.recyclerview.apply {
             layoutManager = LinearLayoutManager(activity)
-            adapter = MainTaskListAdapter()
+            adapter = MainTaskListAdapter(MainTaskListAdapter.MainTaskListener { name ->
+                mainTaskViewModel.onMainTaskClicked(name)
+            }).apply {
+                submitList(mainTaskViewModel.allTasks.value)
+            }
         }
         binding.fab.setOnClickListener {
             startActivity(Intent(requireContext(), AddMainTaskActivity::class.java))
         }
+        mainTaskViewModel.allTasks.observe(viewLifecycleOwner) {
+            binding.recyclerview.apply {
+                layoutManager = LinearLayoutManager(activity)
+                adapter = MainTaskListAdapter(MainTaskListAdapter.MainTaskListener { name ->
+                    mainTaskViewModel.onMainTaskClicked(name)
+                }).apply {
+                    submitList(it)
+                }
+            }
+        }
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

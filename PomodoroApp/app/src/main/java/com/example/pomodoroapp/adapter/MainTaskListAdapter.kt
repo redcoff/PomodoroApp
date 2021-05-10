@@ -1,5 +1,6 @@
 package com.example.pomodoroapp.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,48 +9,40 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pomodoroapp.R
+import com.example.pomodoroapp.databinding.MainTaskItemBinding
 import com.example.pomodoroapp.model.MainTask
 import com.example.pomodoroapp.model.Task
 
+sealed class DataItem {
 
-class MainTaskListAdapter(private val interaction: Interaction? = null) : ListAdapter<MainTask, MainTaskListAdapter.TaskViewHolder>(TasksComparator()) {
+}
+
+class MainTaskListAdapter(val clickListener: MainTaskListener) :  ListAdapter<MainTask, MainTaskListAdapter.TaskViewHolder>(Companion) {
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        return TaskViewHolder.create(parent)
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val binding = MainTaskItemBinding.inflate(layoutInflater)
+
+        return TaskViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        val current = getItem(position)
-        holder.bind(current.name)
+        val currentTask = getItem(position)
+        holder.binding.mainTask = currentTask
+        holder.binding.executePendingBindings()
     }
 
-    class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val wordItemView: TextView = itemView.findViewById(R.id.task_text)
 
-        fun bind(text: String?) {
-            wordItemView.text = text
-        }
+    class TaskViewHolder(val binding: MainTaskItemBinding) : RecyclerView.ViewHolder(binding.root)
 
-        companion object {
-            fun create(parent: ViewGroup): TaskViewHolder {
-                val view: View = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.main_task_item, parent, false)
-                return TaskViewHolder(view)
-            }
-        }
+    companion object: DiffUtil.ItemCallback<MainTask>() {
+        override fun areItemsTheSame(oldItem: MainTask, newItem: MainTask): Boolean = oldItem === newItem
+        override fun areContentsTheSame(oldItem: MainTask, newItem: MainTask): Boolean = oldItem.name == newItem.name
     }
 
-    interface Interaction {
-        fun itemClicked(item: Task)
+    class MainTaskListener(val clickListener: (taskName: String) -> Unit) {
+        fun onClick(task: MainTask) = clickListener(task.name)
     }
 
-    class TasksComparator : DiffUtil.ItemCallback<MainTask>() {
-        override fun areItemsTheSame(oldItem: MainTask, newItem: MainTask): Boolean {
-            return oldItem === newItem
-        }
-
-        override fun areContentsTheSame(oldItem: MainTask, newItem: MainTask): Boolean {
-            return oldItem.name == newItem.name
-        }
-    }
 }
