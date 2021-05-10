@@ -8,8 +8,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pomodoroapp.R
+import com.example.pomodoroapp.adapter.DataItem
 import com.example.pomodoroapp.adapter.MainTaskListAdapter
 import com.example.pomodoroapp.databinding.ActivityMainTasksBinding
 import com.example.pomodoroapp.ui.AddMainTaskActivity
@@ -35,6 +37,14 @@ class MainTasksFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = DataBindingUtil.inflate(inflater, R.layout.activity_main_tasks, container, false)
 
+        val manager = GridLayoutManager(activity, 3)
+        manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int) =  when (position) {
+                0 -> 3
+                else -> 1
+            }
+        }
+
         return binding.root
     }
 
@@ -45,7 +55,7 @@ class MainTasksFragment : Fragment() {
             adapter = MainTaskListAdapter(MainTaskListAdapter.MainTaskListener { name ->
                 mainTaskViewModel.onMainTaskClicked(name)
             }).apply {
-                submitList(mainTaskViewModel.allTasks.value)
+                addHeaderAndSubmitList(mainTaskViewModel.allTasks.value)
             }
         }
         binding.fab.setOnClickListener {
@@ -57,21 +67,10 @@ class MainTasksFragment : Fragment() {
                 adapter = MainTaskListAdapter(MainTaskListAdapter.MainTaskListener { name ->
                     mainTaskViewModel.onMainTaskClicked(name)
                 }).apply {
-                    submitList(it)
+                    addHeaderAndSubmitList(it)
                 }
             }
         }
 
     }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        //myPoisViewModel = ViewModelProviders.of(this, factory).get(MyPoisViewModel::class.java)
-        //taskViewModel = ViewModelProvider(this, factory).get(taskViewModel::class.java)
-    }
-
-
-    //override fun itemClicked(item: Task) {
-    //    Snackbar.make(binding.root, "Item id=${item.id} clicked", Snackbar.LENGTH_SHORT).show()
-    //}
 }

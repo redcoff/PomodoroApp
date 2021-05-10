@@ -1,82 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
-
-    <EditText
-        android:id="@+id/etEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Zadejte e-mail."
-        android:inputType="textEmailAddress"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/twEmail" />
-
-    <EditText
-        android:id="@+id/etPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Zadejte heslo."
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/twPassword" />
-
-    <Button
-        android:id="@+id/buLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
-        android:background="#D61B1B"
-        android:onClick="buLoginEvent"
-        android:text="Přihlásit se"
-        app:backgroundTint="#D81818"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etPassword" />
+    android:layout_marginLeft="30dp"
+    android:layout_marginRight="30dp"
+    android:background="#FFFFFF"
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/appNameLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:text="PomodoroApp"
+        android:layout_marginTop="200dp"
+        android:text="@string/pomodoroapp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:paddingBottom="20dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/twEmail"
-        android:layout_width="wrap_content"
+     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/etEmailField"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="101dp"
-        android:layout_marginLeft="101dp"
-        android:layout_marginTop="155dp"
-        android:layout_marginEnd="272dp"
-        android:layout_marginRight="272dp"
-        android:text="E-mail"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:hint="@string/e_mail"
+        android:inputType="textEmailAddress"
+        app:layout_constraintTop_toBottomOf="@id/appNameLogin">
 
-    <TextView
-        android:id="@+id/twPassword"
-        android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/etPasswordField"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="101dp"
-        android:layout_marginLeft="101dp"
-        android:layout_marginTop="54dp"
-        android:layout_marginEnd="274dp"
-        android:layout_marginRight="274dp"
-        android:text="Heslo"
+        android:ems="10"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        app:layout_constraintTop_toBottomOf="@+id/etEmailField" >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/buLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="buLoginEvent"
+        android:text="@string/log_in"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etEmail" />
+        android:layout_marginTop="25dp"
+        app:layout_constraintTop_toBottomOf="@+id/etPasswordField" />
+    <Button
+        android:id="@+id/buLoginBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="buLoginEvent"
+        android:text="Sign up with Google"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/buLogin"
+        android:background="@color/design_default_color_on_primary"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

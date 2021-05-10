@@ -5,11 +5,13 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentTransaction
 import com.example.pomodoroapp.R
 import com.example.pomodoroapp.databinding.ActivityAddMainTaskBinding
 import com.example.pomodoroapp.model.MainTask
 import com.example.pomodoroapp.viewmodel.AddMainTaskViewModel
 import com.google.firebase.Timestamp
+import kotlinx.android.synthetic.main.main_task_header.view.*
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
@@ -24,33 +26,36 @@ class AddMainTaskActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_main_task)
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_add_main_task)
-        binding.etDate.setOnClickListener {
+        binding.etDateInput.setOnClickListener {
             showDatePicker()
         }
-        binding.etDate.setOnFocusChangeListener { _, focus ->
+        binding.etDateInput.setOnFocusChangeListener { _, focus ->
             if(focus)
                 showDatePicker()
         }
         binding.btnSubmit.setOnClickListener{
             addMainTaskViewModel.insert(MainTask(
-                binding.etName.text.toString(),
+                binding.etNameText.text.toString(),
                 addMainTaskViewModel.auth.currentUser?.uid?: "",
                 0,
-                binding.etDescription.text.toString(),
+                binding.etDescriptionText.text.toString(),
                 Timestamp(Date.from(addMainTaskViewModel.date?.atStartOfDay(ZoneId.systemDefault())?.toInstant())),
             ))
+            super.onBackPressed();
         }
 
     }
 
+
+
     private fun showDatePicker(){
-        val default = LocalDate.now()
         DatePickerDialog(
             this
         ).apply {
             this.setOnDateSetListener { _ , year, month, dayOfMonth ->
                 addMainTaskViewModel.date = LocalDate.of(year, month, dayOfMonth)
-                binding.etDate.setText(addMainTaskViewModel.date.toString())
+                binding.etDateInput.setText(addMainTaskViewModel.date.toString())
+                binding.etDateInput.clearFocus()
             }
         }.show()
 

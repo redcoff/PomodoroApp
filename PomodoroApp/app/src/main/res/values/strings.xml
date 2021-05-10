@@ -15,4 +15,16 @@
     <string name="OK">OK</string>
     <string name="bad_email_format">Špatný formát emailu.</string>
     <string name="login_error">Chyba přihlášení.</string>
+    <string name="main_tasks">Main Tasks</string>
+    <string name="pomodoro">Pomodoro</string>
+    <string name="name_of_the_main_task">Name of the Main Task</string>
+    <string name="task_description">Task Description</string>
+    <string name="date">Date</string>
+    <string name="confirm">Confirm</string>
+    <string name="new_task">New Task</string>
+    <string name="e_mail">E-mail</string>
+    <string name="pomodoroapp">PomodoroApp</string>
+    <string name="password">Password</string>
+    <string name="log_in">Log in</string>
+    <string name="back">Back</string>
 </resources>
