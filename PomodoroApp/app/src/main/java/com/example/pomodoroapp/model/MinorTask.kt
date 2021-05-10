@@ -6,8 +6,8 @@ data class MinorTask(
     val uid: String = "",
 ) {
     enum class Type {
-        DEFERRABLE, // could be postponed
-        INDELIBLE   // cant be postponed
+        DEFERRABLE, // could be postponed// odkladne
+        INDELIBLE   // cant be postponed// neodkladne
     }
 
 }

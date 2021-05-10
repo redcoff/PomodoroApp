@@ -1,16 +1,14 @@
 package com.example.pomodoroapp.ui
 
 import android.os.Bundle
+import android.widget.CompoundButton
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentManager
 import com.example.pomodoroapp.R
 import com.example.pomodoroapp.databinding.ActivityAddMinorTaskBinding
 import com.example.pomodoroapp.model.MinorTask
-import com.example.pomodoroapp.ui.tabs.MinorTasksFragment
 import com.example.pomodoroapp.viewmodel.AddMinorTaskViewModel
-import com.google.android.material.internal.ContextUtils.getActivity
 import java.util.*
 
 
@@ -23,24 +21,25 @@ class AddMinorTaskActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_minor_task)
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_add_minor_task)
+        binding.minorTaskTypeButton.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+        if(isChecked){
+            buttonView.text = "Neodkladné"
+        }else buttonView.text = "Odkladné"
+        // do something, the isChecked will be
+            // true if the switch is in the On position
+        })
 
         binding.submitMinorTask.setOnClickListener{
-            println(binding.etName.text.toString())
+            val type:MinorTask.Type = if(binding.minorTaskTypeButton.isChecked) MinorTask.Type.INDELIBLE
+            else MinorTask.Type.DEFERRABLE
             addMinorTaskViewModel.insert(
                 MinorTask(
-                    MinorTask.Type.DEFERRABLE,
-                    binding.etName.text.toString(),
+                    type,
+                    binding.etTextMinorTask.text.toString(),
                     addMinorTaskViewModel.auth.currentUser?.uid ?: "",
                 )
             )
-            finish()
-        //            val transaction = this.supportFragmentManager.beginTransaction()
-//            transaction.replace(R.id.minor_tasks_fragment, MinorTasksFragment())
-//            transaction.disallowAddToBackStack()
-//            transaction.commit()
-
+            super.onBackPressed();
         }
-
     }
-
 }

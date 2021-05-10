@@ -27,4 +27,10 @@
     <string name="password">Password</string>
     <string name="log_in">Log in</string>
     <string name="back">Back</string>
+    <string name="neodkladne">Neodkladné</string>
+    <string name="info_icon">info_icon</string>
+    <string name="n_zev_kolu">Název úkolu</string>
+    <string name="pridat_taks">Přidat task</string>
+    <string name="n_zev_tasku">Název tasku</string>
+    <string name="new_minor_task_name">Název nového tasku</string>
 </resources>

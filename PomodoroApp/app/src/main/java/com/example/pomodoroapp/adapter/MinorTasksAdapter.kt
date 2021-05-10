@@ -1,79 +1,96 @@
 package com.example.pomodoroapp.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.pomodoroapp.R
-import com.example.pomodoroapp.databinding.ActivityMinorTasksBinding
-import com.example.pomodoroapp.model.MainTask
+import com.example.pomodoroapp.databinding.MinorTaskItemBinding
 import com.example.pomodoroapp.model.MinorTask
-import com.example.pomodoroapp.model.Task
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
+private val ITEM_VIEW_TYPE_ITEM = 1
 
-class MinorTasksAdapter(private val interaction: Interaction? = null) : ListAdapter<MinorTask, MinorTasksAdapter.TaskViewHolder>(TasksComparator()) {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        return TaskViewHolder.from(parent,interaction)
+sealed class MinorDataItem {
+    abstract val name: String
+    data class MinorTaskItem(val minorTask: MinorTask): MinorDataItem(){
+        override val name = minorTask.name
     }
-
-    override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        holder.bind(getItem(position))
-    }
+}
 
 
+class MinorTasksAdapter(val clickListener: MinorTaskListener) : ListAdapter<MinorDataItem, RecyclerView.ViewHolder>(MinorTaskDiffCallback()) {
+    private val adapterScope = CoroutineScope(Dispatchers.Default)
 
-    fun swapData(it: List<MinorTask>) {
-        submitList(it.toMutableList())
-    }
-
-    class TaskViewHolder(private val binding: ActivityMinorTasksBinding,
-                         private val interaction: Interaction?
-                          ) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
-
-        lateinit var storedItem: MinorTask
-
-        init {
-            itemView.setOnClickListener(this)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            ITEM_VIEW_TYPE_ITEM -> TaskViewHolder.from(parent)
+            else -> throw ClassCastException("Unknown viewType $viewType")
         }
+    }
 
-        fun bind(item: MinorTask) {
-            storedItem = item
-//            binding. = item.name
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is TaskViewHolder -> {
+                val taskitem = getItem(position) as MinorDataItem.MinorTaskItem
+                holder.bind(taskitem.minorTask, clickListener)
+            }
+        }
+    }
+
+    fun addSubmitList(list: List<MinorTask>?) {
+        adapterScope.launch {
+            val items = when (list) {
+                null -> listOf()
+                else -> list.map { MinorDataItem.MinorTaskItem(it) }
+            }
+            withContext(Dispatchers.Main) {
+                submitList(items)
+            }
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return when (getItem(position)) {
+            is MinorDataItem.MinorTaskItem -> ITEM_VIEW_TYPE_ITEM
+        }
+    }
+
+
+    class TaskViewHolder(private val binding: MinorTaskItemBinding) : RecyclerView.ViewHolder(binding.root){
+        fun bind(item: MinorTask, clickListener: MinorTaskListener) {
+             binding.minorTask = item
+             binding.executePendingBindings()
         }
 
         companion object {
-            fun from(parent: ViewGroup, interaction: Interaction?): TaskViewHolder {
-                val binding: ActivityMinorTasksBinding = ActivityMinorTasksBinding.inflate(
-                    LayoutInflater.from(
-                        parent.context
-                    ),
-                    parent,
-                    false
-                )
-                return TaskViewHolder(binding,interaction)
+            fun from(parent: ViewGroup): RecyclerView.ViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = MinorTaskItemBinding.inflate(layoutInflater, parent, false)
+                return TaskViewHolder(binding)
             }
         }
-
-        override fun onClick(v: View?) {
-            interaction?.itemClicked(storedItem)
-        }
     }
 
-    interface Interaction {
-        fun itemClicked(item: MinorTask)
+
+    class MinorTaskListener(val clickListener: (taskName: String) -> Unit) {
+        fun onClick(task: MinorTask) = clickListener(task.name)
+        fun onLongClick(task: MinorTask) = clickListener(task.name)
     }
 
-    class TasksComparator : DiffUtil.ItemCallback<MinorTask>() {
-        override fun areItemsTheSame(oldItem: MinorTask, newItem: MinorTask): Boolean {
-            return oldItem === newItem
-        }
-
-        override fun areContentsTheSame(oldItem: MinorTask, newItem: MinorTask): Boolean {
+    class MinorTaskDiffCallback : DiffUtil.ItemCallback<MinorDataItem>() {
+        override fun areItemsTheSame(oldItem: MinorDataItem, newItem: MinorDataItem): Boolean {
             return oldItem.name == newItem.name
         }
+        @SuppressLint("DiffUtilEquals")
+        override fun areContentsTheSame(oldItem: MinorDataItem, newItem: MinorDataItem): Boolean {
+            return oldItem == newItem
+        }
     }
+
+
 }

@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent">-->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -13,57 +8,141 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".TaskActivity">
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="409dp"
-        android:layout_height="69dp"
-        android:ellipsize="marquee"
-        android:fadingEdge="horizontal"
-        android:singleLine="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Borderless.Colored"
-        app:layout_constraintBottom_toTopOf="@+id/neodkladne"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        >
 
-    <TextView
-        android:id="@+id/mtrl_list_item_text"
-        android:layout_width="406dp"
-        android:layout_height="96dp"
-        android:layout_gravity="center_vertical"
-        android:maxLines="1"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/neodkladne"
+        <TextView
+            android:id="@+id/minor_task_header"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/border"
+            android:gravity="center_horizontal|center_vertical"
+            android:padding="8dp"
+            android:text="@string/neodkladne"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        tools:layout_editor_absoluteY="347dp" />
 
-        <!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/odkladne"-->
-<!--        android:layout_width="412dp"-->
-<!--        android:layout_height="282dp"-->
-<!--        android:layout_marginTop="40dp"-->
-<!--        app:layoutManager="LinearLayoutManager"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.0"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/mtrl_list_item_text"-->
-<!--        app:layout_constraintVertical_bias="0.966" />-->
 
+            <!--            <TextView-->
+            <!--                android:id="@+id/title"-->
+            <!--                android:layout_width="388dp"-->
+            <!--                android:layout_height="73dp"-->
+            <!--                android:ellipsize="marquee"-->
+            <!--                android:fadingEdge="horizontal"-->
+            <!--                android:singleLine="true"-->
+            <!--                android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Borderless.Colored" />-->
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/mtrl_list_item_text"-->
+            <!--                android:layout_width="406dp"-->
+            <!--                android:layout_height="96dp"-->
+            <!--                android:layout_gravity="center_vertical"-->
+            <!--                android:maxLines="1"-->
+            <!--                android:textAppearance="?attr/textAppearanceSubtitle1"-->
+            <!--                android:textColor="@color/black"-->
+            <!--                tools:layout_editor_absoluteY="689dp" />-->
+
+            <!--    <androidx.recyclerview.widget.RecyclerView-->
+            <!--        android:id="@+id/odkladne"-->
+            <!--        android:layout_width="412dp"-->
+            <!--        android:layout_height="282dp"-->
+            <!--        android:layout_marginTop="40dp"-->
+            <!--        app:layoutManager="LinearLayoutManager"-->
+            <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--        app:layout_constraintEnd_toEndOf="parent"-->
+            <!--        app:layout_constraintHorizontal_bias="0.0"-->
+            <!--        app:layout_constraintStart_toStartOf="parent"-->
+            <!--        app:layout_constraintTop_toBottomOf="@+id/mtrl_list_item_text"-->
+            <!--        app:layout_constraintVertical_bias="0.966" />-->
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="375dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.494"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/minor_task_header"
+            tools:context=".TaskActivity">
+
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/nestedScrollView"
+                android:layout_width="387dp"
+                android:layout_height="302dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:context=".ui.AddMinorTaskActivity">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/neodkladne"
+                    android:layout_width="400dp"
+                    android:layout_height="384dp"
+                    app:layout_constraintBottom_toTopOf="@+id/mtrl_list_item_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.core.widget.NestedScrollView>
+
+            <TextView
+                android:id="@+id/minor_task_header2"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/border"
+                android:gravity="center_horizontal|center_vertical"
+                android:padding="8dp"
+                android:text="@string/odkladn"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nestedScrollView" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout3"
+            android:layout_width="391dp"
+            android:layout_height="340dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.494"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/minor_task_header"
+            tools:context=".TaskActivity">
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:contentDescription="@string/add_task"
+            android:src="@drawable/ic_baseline_add_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:id="@+id/nestedScrollView2"
+            android:layout_width="351dp"
+            android:layout_height="322dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
+            app:layout_constraintVertical_bias="0.026"
             tools:context=".ui.AddMinorTaskActivity">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/neodkladne"
+                android:id="@+id/odkladne"
                 android:layout_width="400dp"
                 android:layout_height="384dp"
                 app:layout_constraintBottom_toTopOf="@+id/mtrl_list_item_text"
@@ -71,20 +150,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
         </androidx.core.widget.NestedScrollView>
 
-
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="126dp"
-        android:layout_height="38dp"
-        android:contentDescription="@string/add_task"
-        android:src="@drawable/ic_baseline_add_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
