@@ -1,13 +1,18 @@
 package com.example.pomodoroapp.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pomodoroapp.databinding.MinorTaskItemBinding
 import com.example.pomodoroapp.model.MinorTask
+import com.example.pomodoroapp.ui.AddMinorTaskActivity
+import com.example.pomodoroapp.ui.EditMinorTaskActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,11 +24,14 @@ sealed class MinorDataItem {
     abstract val name: String
     data class MinorTaskItem(val minorTask: MinorTask): MinorDataItem(){
         override val name = minorTask.name
+        val type = minorTask.type
     }
 }
 
 
-class MinorTasksAdapter(val clickListener: MinorTaskListener) : ListAdapter<MinorDataItem, RecyclerView.ViewHolder>(MinorTaskDiffCallback()) {
+class MinorTasksAdapter(val clickListener: MinorTaskListener) : ListAdapter<MinorDataItem, RecyclerView.ViewHolder>(
+    MinorTaskDiffCallback()
+) {
     private val adapterScope = CoroutineScope(Dispatchers.Default)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -66,6 +74,16 @@ class MinorTasksAdapter(val clickListener: MinorTaskListener) : ListAdapter<Mino
              binding.minorTask = item
              binding.executePendingBindings()
         }
+
+        init {
+            binding.cardItems.setOnClickListener {
+                val int = Intent(it.context,EditMinorTaskActivity::class.java)
+                int.putExtra("taskName",binding.taskText.text.toString())
+                int.putExtra("type",binding.minorTask?.type.toString())
+                it.context.startActivity(int)
+            }
+        }
+
 
         companion object {
             fun from(parent: ViewGroup): RecyclerView.ViewHolder {

@@ -44,12 +44,6 @@ class MinorTasksFragment : Fragment() {
                 else -> 1
             }
         }
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         binding.neodkladne.apply {
             layoutManager = LinearLayoutManager(activity)
             adapter = MinorTasksAdapter(MinorTasksAdapter.MinorTaskListener { name ->
@@ -59,6 +53,14 @@ class MinorTasksFragment : Fragment() {
             }
         }
 
+        binding.neodkladne.apply {
+            layoutManager = LinearLayoutManager(activity)
+            adapter = MinorTasksAdapter(MinorTasksAdapter.MinorTaskListener { name ->
+                minorTaskViewModel.onMinorTaskClicked(name)
+            }).apply {
+                addSubmitList(minorTaskViewModel.odkladneTasky.value)
+            }
+        }
         minorTaskViewModel.neodkladneTasky.observe(viewLifecycleOwner) {
             binding.neodkladne.apply {
                 layoutManager = LinearLayoutManager(activity)
@@ -69,17 +71,6 @@ class MinorTasksFragment : Fragment() {
                 }
             }
         }
-
-        binding.odkladne.apply {
-            layoutManager = LinearLayoutManager(activity)
-            adapter = MinorTasksAdapter(MinorTasksAdapter.MinorTaskListener { name ->
-                minorTaskViewModel.onMinorTaskClicked(name)
-            }).apply {
-                addSubmitList(minorTaskViewModel.odkladneTasky.value)
-            }
-        }
-
-
 
         minorTaskViewModel.odkladneTasky.observe(viewLifecycleOwner) {
             binding.odkladne.apply {
@@ -92,9 +83,21 @@ class MinorTasksFragment : Fragment() {
             }
         }
 
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
         binding.fab.setOnClickListener {
             startActivity(Intent(requireContext(), AddMinorTaskActivity::class.java))
         }
     }
+
+
+
+
 
 }

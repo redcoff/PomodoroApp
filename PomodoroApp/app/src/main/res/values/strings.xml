@@ -33,4 +33,8 @@
     <string name="pridat_taks">Přidat task</string>
     <string name="n_zev_tasku">Název tasku</string>
     <string name="new_minor_task_name">Název nového tasku</string>
+    <string name="new_account">Nový účet</string>
+    <string name="delete_minor_task">Odstranit task</string>
+    <string name="change_minor_task_name">Upravit název tasku</string>
+    <string name="change_task">Upravit task</string>
 </resources>

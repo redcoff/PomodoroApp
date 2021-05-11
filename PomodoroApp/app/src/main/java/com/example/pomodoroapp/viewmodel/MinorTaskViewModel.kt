@@ -2,11 +2,15 @@ package com.example.pomodoroapp.viewmodel
 
 import android.app.Application
 import android.content.ContentValues
+import android.content.Intent
 import android.util.Log
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.pomodoroapp.model.MainTask
 import com.example.pomodoroapp.model.MinorTask
+import com.example.pomodoroapp.ui.AddMinorTaskActivity
 import com.example.pomodoroapp.utilities.minorTasks.Constants
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -16,9 +20,12 @@ class MinorTaskViewModel (application: Application) : BaseViewModel(application)
     private var _neodkladneTasky = MutableLiveData<List<MinorTask>>()
 
     init {
-        getAllDeferrableTasks()
         getAllIndelibleTasks()
-        listenToMinorTasks()
+        getAllDeferrableTasks()
+
+        listenToIndelibleMinorTasks()
+        listenToDefferableTasks()
+
     }
 
     fun insert(task: MinorTask) = viewModelScope.launch {
@@ -37,10 +44,9 @@ class MinorTaskViewModel (application: Application) : BaseViewModel(application)
 
 
 
-    private fun listenToMinorTasks(){
+    private fun listenToIndelibleMinorTasks(){
         firestore.collection(Constants.MINORTASKS).whereEqualTo("type","INDELIBLE").addSnapshotListener{
                 snapshot, e ->
-            //exception, skip
             if( e != null) {
                 Log.w(ContentValues.TAG, "Listen Failed", e)
                 return@addSnapshotListener
@@ -49,10 +55,10 @@ class MinorTaskViewModel (application: Application) : BaseViewModel(application)
                 getAllIndelibleTasks()
             }
         }
-
+    }
+    private fun listenToDefferableTasks(){
         firestore.collection(Constants.MINORTASKS).whereEqualTo("type","DEFFERABLE").addSnapshotListener{
                 snapshot, e ->
-            //exception, skip
             if( e != null) {
                 Log.w(ContentValues.TAG, "Listen Failed", e)
                 return@addSnapshotListener
@@ -71,6 +77,5 @@ class MinorTaskViewModel (application: Application) : BaseViewModel(application)
         set(value) {_neodkladneTasky = value}
 
     fun onMinorTaskClicked(name: String){
-        //nic! :)
     }
 }
