@@ -33,7 +33,6 @@ sealed class DataItem {
     object Header: DataItem(){
         override val name = ""
     }
-
 }
 
 class MainTaskListAdapter(val clickListener: MainTaskListener) :  ListAdapter<DataItem, RecyclerView.ViewHolder>(MainTaskDiffCallback()) {

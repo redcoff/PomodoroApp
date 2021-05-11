@@ -1,14 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
 <!--    <style name="Theme.PomodoroApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">-->
-    <style name="Theme.PomodoroApp" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.PomodoroApp" parent="Theme.MaterialComponents.DayNight">
 
     <!-- Primary brand color. -->
-        <item name="colorPrimary"> 	#808080</item>
-        <item name="colorPrimaryVariant"> 	#808080</item>
+        <item name="colorPrimary"> 	#736CED</item>
+        <item name="colorPrimaryVariant"> #736CED</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">#FFFFFF</item>
+        <item name="colorSecondary">#9F9FED</item>
         <item name="colorSecondaryVariant">#074EE8</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
@@ -24,11 +24,11 @@
     </style>
 
     <style name="MyButtonTheme" >
-        <item name="backgroundTint">#074EE8</item>
+        <item name="backgroundTint">#F2DFD7</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:fontFamily"> sans-serif-medium</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">sans-serif-light </item>
     </style>
 
     <style name="task_title">

@@ -33,4 +33,7 @@
     <string name="pridat_taks">Přidat task</string>
     <string name="n_zev_tasku">Název tasku</string>
     <string name="new_minor_task_name">Název nového tasku</string>
+    <string name="spustit_pomodoro">Spustit Pomodoro</string>
+    <string name="zrusit_pomodoro">Zrusit Pomodoro</string>
+    <string name="zvolit_hlavn_kol">Hlavní úkol</string>
 </resources>
