@@ -19,6 +19,8 @@
         </activity>
         <activity android:name=".ui.AddMainTaskActivity" />
         <activity android:name=".ui.AddMinorTaskActivity" />
+        <activity android:name=".ui.RegisterUser" />
+        <activity android:name=".ui.EditMinorTaskActivity" />
 
     </application>
 

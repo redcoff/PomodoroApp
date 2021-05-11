@@ -21,13 +21,13 @@ class AddMinorTaskActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_minor_task)
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_add_minor_task)
-        binding.minorTaskTypeButton.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
-        if(isChecked){
-            buttonView.text = "Neodkladné"
-        }else buttonView.text = "Odkladné"
-        // do something, the isChecked will be
+        binding.minorTaskTypeButton.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                buttonView.text = "Neodkladné"
+            } else buttonView.text = "Odkladné"
+            // do something, the isChecked will be
             // true if the switch is in the On position
-        })
+        }
 
         binding.submitMinorTask.setOnClickListener{
             val type:MinorTask.Type = if(binding.minorTaskTypeButton.isChecked) MinorTask.Type.INDELIBLE
