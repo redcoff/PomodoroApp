@@ -18,8 +18,8 @@ class MinorTaskViewModel (application: Application) : BaseViewModel(application)
         getAllIndelibleTasks()
         getAllDeferrableTasks()
 
-        listenToIndelibleMinorTasks()
         listenToDefferableTasks()
+        listenToIndelibleMinorTasks()
 
     }
 
@@ -52,7 +52,7 @@ class MinorTaskViewModel (application: Application) : BaseViewModel(application)
         }
     }
     private fun listenToDefferableTasks(){
-        firestore.collection(Constants.MINORTASKS).whereEqualTo("type","DEFFERABLE").addSnapshotListener{
+        firestore.collection(Constants.MINORTASKS).whereEqualTo("type","DEFERRABLE").addSnapshotListener{
                 snapshot, e ->
             if( e != null) {
                 Log.w(ContentValues.TAG, "Listen Failed", e)

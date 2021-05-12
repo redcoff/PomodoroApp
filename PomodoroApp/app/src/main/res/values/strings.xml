@@ -43,4 +43,8 @@
     <string name="NotifID">Čas běží!</string>
     <string name="snooze">Nejaky snooze</string>
     <string name="fuckme">jdi do pice uz</string>
+    <string name="zm_nit_popis_kolu">change_descriptiopn</string>
+    <string name="change_description">Změnit popis úkolu</string>
+    <string name="change_date">Změnit datum úkolu</string>
+    <string name="pomodoros">Počet uplynulých pomodor</string>
 </resources>
