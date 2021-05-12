@@ -2,21 +2,22 @@ package com.example.pomodoroapp.viewmodel
 
 import android.app.Application
 import android.os.CountDownTimer
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.pomodoroapp.model.MainTask
-import com.example.pomodoroapp.utilities.minorTasks.Constants
+import com.example.pomodoroapp.utilities.Constants
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.time.LocalDateTime
 
 class PomodoroViewModel(application: Application) : BaseViewModel(application)  {
-    var counter = MutableLiveData<Int>(1*60)
+    var counter = MutableLiveData<Int>(getCurrentStateTime())
     var running = MutableLiveData<Boolean>(false)
     var timer = MutableLiveData<CountDownTimer>()
-    var timerInfo = MutableLiveData<String>("25:00")
+    var timerInfo = MutableLiveData<String>("${(counter.value?.div(60))}:${((counter.value?.rem(60)))}")
     var progress = MutableLiveData<Int>(0)
+
+    var isBreak = false
+    var pomodoroCounter = 0
 
     //0 - visible
     //8 - gone
@@ -26,6 +27,7 @@ class PomodoroViewModel(application: Application) : BaseViewModel(application)  
     var startPomodoroVisibility = MutableLiveData<Int>(0)
 
     var _allTasks = MutableLiveData<List<MainTask>>()
+
 
     init {
         getAllMainTasks()
@@ -38,5 +40,18 @@ class PomodoroViewModel(application: Application) : BaseViewModel(application)  
     internal var allTasks: MutableLiveData<List<MainTask>>
         get() {return _allTasks}
         set(value) {_allTasks = value}
+
+    // full pomodoro time (25 min) or break (5 min) or full break (30 min)
+    fun getCurrentStateTime(): Int {
+        if(isBreak && pomodoroCounter == 4){
+            return Constants.FULLBREAKTIME
+        }
+        if(isBreak){
+            return Constants.BREAKTIME
+        }
+        else {
+            return Constants.POMODOROTIME
+        }
+    }
 
 }

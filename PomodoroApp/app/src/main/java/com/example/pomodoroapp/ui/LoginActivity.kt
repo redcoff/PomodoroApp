@@ -1,7 +1,9 @@
 package com.example.pomodoroapp.ui
 
-import android.app.AlertDialog
+import android.app.*
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.provider.AlarmClock.EXTRA_MESSAGE
 import android.text.TextUtils
@@ -9,16 +11,14 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentActivity
+import androidx.core.app.NotificationCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.pomodoroapp.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -66,6 +66,14 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
             val intent = Intent(this, RegisterUser::class.java)
             startActivity(intent)
         }
+
+        // it is a class to notify the user of events that happen.
+        // This is how you tell the user that something has happened in the
+        // background.
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+
+
 
     }
 
@@ -208,4 +216,50 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
         job.cancel()
     }
 
+    // declaring variables
+    lateinit var notificationManager: NotificationManager
+    lateinit var notificationChannel: NotificationChannel
+    lateinit var builder: Notification.Builder
+    private val channelId = "i.apps.notifications"
+    private val description = "Test notification"
+
+
+
+/* MRDKA
+    private fun createNotif() {
+
+        val mNotificationManager: NotificationManager = this.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val mBuilder = NotificationCompat.Builder(this.applicationContext, "notify_001")
+        val ii = Intent(this.applicationContext, LoginActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(this, 0, ii, 0)
+
+        val bigText = NotificationCompat.BigTextStyle()
+        //bigText.bigText(verseurl)
+        bigText.bigText("sadfSDFsf")
+        bigText.setBigContentTitle("JDI DO PICI")
+        bigText.setSummaryText("KUNDO")
+
+        mBuilder.setContentIntent(pendingIntent)
+        mBuilder.setSmallIcon(R.mipmap.ic_launcher_round)
+        mBuilder.setContentTitle("MRDKA")
+        mBuilder.setContentText("SADFGASDGAJKSDFGDF")
+        mBuilder.priority = Notification.PRIORITY_MAX
+        mBuilder.setStyle(bigText)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelId = "Your_channel_id"
+            val channel = NotificationChannel(
+                channelId,
+                "Channel human readable title",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            mNotificationManager.createNotificationChannel(channel)
+            mBuilder.setChannelId(channelId)
+        }
+
+        mNotificationManager.notify(0, mBuilder.build())
+
+
+    }
+*/
 }

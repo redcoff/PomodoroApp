@@ -40,4 +40,7 @@
     <string name="spustit_pomodoro">Spustit Pomodoro</string>
     <string name="zrusit_pomodoro">Zrusit Pomodoro</string>
     <string name="zvolit_hlavn_kol">Hlavní úkol</string>
+    <string name="NotifID">Čas běží!</string>
+    <string name="snooze">Nejaky snooze</string>
+    <string name="fuckme">jdi do pice uz</string>
 </resources>

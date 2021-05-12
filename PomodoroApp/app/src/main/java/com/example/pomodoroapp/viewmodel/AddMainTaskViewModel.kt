@@ -1,10 +1,9 @@
 package com.example.pomodoroapp.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.pomodoroapp.model.MainTask
-import com.example.pomodoroapp.utilities.minorTasks.Constants
+import com.example.pomodoroapp.utilities.Constants
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate

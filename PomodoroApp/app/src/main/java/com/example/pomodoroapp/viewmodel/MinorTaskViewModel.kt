@@ -2,16 +2,11 @@ package com.example.pomodoroapp.viewmodel
 
 import android.app.Application
 import android.content.ContentValues
-import android.content.Intent
 import android.util.Log
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.pomodoroapp.model.MainTask
 import com.example.pomodoroapp.model.MinorTask
-import com.example.pomodoroapp.ui.AddMinorTaskActivity
-import com.example.pomodoroapp.utilities.minorTasks.Constants
+import com.example.pomodoroapp.utilities.Constants
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 

@@ -5,8 +5,7 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.pomodoroapp.model.MainTask
-import com.example.pomodoroapp.model.Task
-import com.example.pomodoroapp.utilities.minorTasks.Constants
+import com.example.pomodoroapp.utilities.Constants
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
