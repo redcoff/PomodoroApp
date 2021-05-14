@@ -8,7 +8,10 @@ import androidx.databinding.DataBindingUtil
 import com.example.pomodoroapp.R
 import com.example.pomodoroapp.databinding.ActivityEditMainTaskBinding
 import com.example.pomodoroapp.viewmodel.EditMainTaskViewModel
+import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class EditMainTaskActivity: AppCompatActivity() {
 
@@ -22,22 +25,35 @@ class EditMainTaskActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_main_task)
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_main_task)
-        binding.etDate.setOnClickListener {
+        binding.etDateEdit.setOnClickListener {
             showDatePicker()
         }
-        binding.etDate.setOnFocusChangeListener { _, focus ->
+        binding.etDateEdit.setOnFocusChangeListener { _, focus ->
             if(focus)
                 showDatePicker()
         }
+        binding.lifecycleOwner = this
         editMainTaskViewModel.taskNameOld = intent.getStringExtra("taskName").toString()
-        binding.taskName = editMainTaskViewModel.taskNameOld
-        binding.taskDescription = intent.getStringExtra("description").toString()
-        //editMainTaskViewModel.newDate = editMainTaskViewModel.newDate
-        binding.taskDate = intent.getStringExtra("date").toString()
-        binding.taskPomodoros = intent.getStringExtra("pomodoros").toString()
+        binding.etNameEdit.setText(intent.getStringExtra("taskName").toString())
+        editMainTaskViewModel.getTaskInfo(editMainTaskViewModel.taskNameOld)
+        editMainTaskViewModel.description.observe(this) {
+            binding.etDescriptionEdit.setText(editMainTaskViewModel.description.value)
+        }
+        editMainTaskViewModel.date.observe(this) {
+            binding.etDateEdit.setText(
+                editMainTaskViewModel.date.value?.toString()?.format(
+                    DateTimeFormatter.ofPattern("dd-MMMM-yyyy"))
+            )
+        }
+        editMainTaskViewModel.pomodoros.observe(this) {
+            binding.etPomodorosEdit.setText(editMainTaskViewModel.pomodoros.value)
+        }
 
         binding.changeTask.setOnClickListener{
-            editMainTaskViewModel.updateTask(binding.etNameEdit.text.toString(), binding.etDescriptionEdit.text.toString())
+            editMainTaskViewModel.updateTask(
+                binding.etNameEdit.text.toString(),
+                binding.etDescriptionEdit.text.toString()
+            )
             finish()
         }
 
@@ -51,9 +67,9 @@ class EditMainTaskActivity: AppCompatActivity() {
         DatePickerDialog(
             this
         ).apply {
-            this.setOnDateSetListener { _ , year, month, dayOfMonth ->
-                editMainTaskViewModel.newDate = LocalDate.of(year, month, dayOfMonth)
-                binding.etDateEdit.setText(editMainTaskViewModel.newDate.toString())
+            this.setOnDateSetListener { _, year, month, dayOfMonth ->
+                editMainTaskViewModel.date.value = Date(year, month, dayOfMonth)
+                binding.etDateEdit.setText(editMainTaskViewModel.date.value.toString())
                 binding.etDateEdit.clearFocus()
             }
         }.show()

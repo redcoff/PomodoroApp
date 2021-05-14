@@ -107,7 +107,7 @@ class MainTaskListAdapter(val clickListener: MainTaskListener) :  ListAdapter<Da
         init {
             binding.cardItems.setOnClickListener {
                 val int = Intent(it.context, EditMainTaskActivity::class.java)
-                int.putExtra("taskName", binding.taskName.text.toString())
+                int.putExtra("taskName", binding.taskName.text)
                 it.context.startActivity(int)
             }
         }

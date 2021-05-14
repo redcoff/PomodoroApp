@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.pomodoroapp.model.MainTask
 import com.example.pomodoroapp.utilities.Constants
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.ktx.toObject
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -16,6 +18,7 @@ class PomodoroViewModel(application: Application) : BaseViewModel(application)  
     var timerInfo = MutableLiveData<String>("${(counter.value?.div(60))}:${((counter.value?.rem(60)))}")
     var progress = MutableLiveData<Int>(0)
 
+    var currenttask : String = ""
     var isBreak = false
     var pomodoroCounter = 0
 
@@ -52,6 +55,25 @@ class PomodoroViewModel(application: Application) : BaseViewModel(application)  
         else {
             return Constants.POMODOROTIME
         }
+    }
+
+    fun updateTaskPomodoro(name: String){
+        firestore.collection(Constants.TASKSCOLLECTION).whereEqualTo("name", name)
+            .get().addOnSuccessListener { documents ->
+                for (document in documents) {
+                    var pomodoros = 0
+                    firestore.collection(Constants.TASKSCOLLECTION).document(document.id).get().addOnSuccessListener { documentSnapshot ->
+                        val task = documentSnapshot.toObject<MainTask>()
+                        if (task != null) {
+                            pomodoros = task.pomodoros
+                        }
+                    }
+                    firestore.collection(Constants.TASKSCOLLECTION).document(document.id).update("pomodoros",pomodoros+1)
+                }
+            }
+            .addOnFailureListener { exception ->
+                println("Error getting documents: $exception")
+            }
     }
 
 }

@@ -15,8 +15,10 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RemoteViews
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.databinding.DataBindingUtil
@@ -53,7 +55,10 @@ class PomodoroTimerFragment : Fragment() {
             override fun onFinish() {
                 "00:00".also { pomodoroViewModel.timerInfo.value = it }
                 pomodoroViewModel.pomodoroCounter++
-                if(!pomodoroViewModel.isBreak) createNotification()
+                if(!pomodoroViewModel.isBreak){
+                    createNotification()
+                    pomodoroViewModel.updateTaskPomodoro(pomodoroViewModel.currenttask)
+                }
                 pomodoroViewModel.isBreak = !pomodoroViewModel.isBreak
 
             }
@@ -114,8 +119,14 @@ class PomodoroTimerFragment : Fragment() {
                     .collect(Collectors.toList())
                 val adapter = ArrayAdapter(requireContext(), R.layout.list_item, items)
                 binding.autoComplete.setAdapter(adapter)
+                binding.autoComplete.setOnItemClickListener { _, _, position, _ ->
+                    // You can get the label or item that the user clicked:
+                    val value = adapter.getItem(position) ?: ""
+                    pomodoroViewModel.currenttask = value
+                }
             }
         }
+
     }
 
 
