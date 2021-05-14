@@ -15,7 +15,7 @@ class PomodoroViewModel(application: Application) : BaseViewModel(application)  
     var counter = MutableLiveData<Int>(getCurrentStateTime())
     var running = MutableLiveData<Boolean>(false)
     var timer = MutableLiveData<CountDownTimer>()
-    var timerInfo = MutableLiveData<String>("${(counter.value?.div(60))}:${((counter.value?.rem(60)))}")
+    var timerInfo:MutableLiveData<String>
     var progress = MutableLiveData<Int>(0)
 
     var currenttask : String = ""
@@ -35,6 +35,11 @@ class PomodoroViewModel(application: Application) : BaseViewModel(application)  
 
     init {
         getAllMainTasks()
+        timerInfo = if(counter.value?.div(60)!! >=10 ) {
+            MutableLiveData<String>("${(counter.value?.div(60))}:00")
+        }else{
+            MutableLiveData<String>("0${(counter.value?.div(60))}:00")
+        }
     }
 
     fun getAllMainTasks() = viewModelScope.launch {
