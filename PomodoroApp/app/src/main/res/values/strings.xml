@@ -48,4 +48,6 @@
     <string name="pomodoros">Počet uplynulých pomodor</string>
     <string name="datum">Datum</string>
     <string name="popis_kolu">Popis úkolu</string>
+    <string name="smazat_kol">Smazat úkol</string>
+    <string name="upravit_kol">Upravit úkol</string>
 </resources>

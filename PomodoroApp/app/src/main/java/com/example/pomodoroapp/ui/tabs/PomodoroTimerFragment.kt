@@ -66,7 +66,12 @@ class PomodoroTimerFragment : Fragment() {
 
 
         binding.startPomodoro.setOnClickListener{
-            startPomodoro()
+            if(pomodoroViewModel.currenttask == ""){
+                val t = Toast.makeText(requireContext(),"Nebyl vybrán hlavní úkol", Toast.LENGTH_LONG)
+                t.show()
+            }
+            else
+                startPomodoro()
         }
         binding.stopPomodoro.setOnClickListener{
             cancelPomodoro()
@@ -77,6 +82,7 @@ class PomodoroTimerFragment : Fragment() {
 
         return binding.root
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -112,6 +118,7 @@ class PomodoroTimerFragment : Fragment() {
         }
 
         pomodoroViewModel.allTasks.observe(viewLifecycleOwner) {
+            pomodoroViewModel.getAllMainTasks()
             if(pomodoroViewModel.allTasks.value != null) {
                 val items = pomodoroViewModel.allTasks.value!!
                     .stream()
@@ -120,7 +127,6 @@ class PomodoroTimerFragment : Fragment() {
                 val adapter = ArrayAdapter(requireContext(), R.layout.list_item, items)
                 binding.autoComplete.setAdapter(adapter)
                 binding.autoComplete.setOnItemClickListener { _, _, position, _ ->
-                    // You can get the label or item that the user clicked:
                     val value = adapter.getItem(position) ?: ""
                     pomodoroViewModel.currenttask = value
                 }

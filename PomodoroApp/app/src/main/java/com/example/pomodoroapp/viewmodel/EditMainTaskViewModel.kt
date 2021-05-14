@@ -39,7 +39,7 @@ class EditMainTaskViewModel  (application: Application) : BaseViewModel(applicat
     }
 
     fun deleteTask(name: String){
-        firestore.collection("minorTasks").whereEqualTo("name", name)
+        firestore.collection(Constants.TASKSCOLLECTION).whereEqualTo("name", name)
             .get().addOnSuccessListener { documents ->
                 for (document in documents) {
                     document.reference.delete()

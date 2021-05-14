@@ -31,8 +31,8 @@
         tools:contentPadding="10dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="358dp"
-            android:layout_height="690dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:padding="8dp">
 
 
@@ -43,6 +43,7 @@
                 android:layout_marginBottom="88dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:text="@string/upravit_kol"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -119,6 +120,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:text="@string/smazat_kol"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/changeTask" />
         </androidx.constraintlayout.widget.ConstraintLayout>
