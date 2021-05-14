@@ -1,5 +1,6 @@
 package com.example.pomodoroapp.ui
 
+import android.app.Activity
 import android.os.Bundle
 import android.widget.CompoundButton
 import androidx.activity.viewModels
@@ -41,5 +42,7 @@ class AddMinorTaskActivity : AppCompatActivity() {
             )
             super.onBackPressed();
         }
+
+        setResult(Activity.RESULT_OK)
     }
 }

@@ -17,7 +17,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="357dp"
-            android:layout_height="676dp"
+            android:layout_height="562dp"
             android:padding="8dp">
 
             <TextView
@@ -31,8 +31,10 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 app:layout_constraintBottom_toTopOf="@id/etName"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.45"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.51" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/etName"

@@ -1,7 +1,9 @@
 package com.example.pomodoroapp.ui
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.widget.Toast
@@ -19,13 +21,32 @@ class RegisterUser: AppCompatActivity() {
         setContentView(R.layout.activity_register_user)
         auth = FirebaseAuth.getInstance()
         etPassword.transformationMethod = PasswordTransformationMethod();
+
         btnSubmit.setOnClickListener{
-            println(etPassword.toString().trim())
-            createAccount(etEmail.text.toString().trim(),etPassword.text.toString().trim())
+            if(etPassword.text.toString().trim().isEmpty() || etEmail.text.toString().trim().isEmpty()){
+                val dlgAlert: AlertDialog.Builder = AlertDialog.Builder(this)
+                dlgAlert.setMessage(getString(R.string.bad_login))
+                dlgAlert.setTitle(getString(R.string.add_credentials))
+                dlgAlert.setPositiveButton(R.string.OK, null)
+                dlgAlert.setCancelable(true)
+                dlgAlert.create().show()
+            }else if(!TextUtils.isEmpty(etEmail.text.toString().trim()) && !android.util.Patterns.EMAIL_ADDRESS.matcher(etEmail.text.toString().trim()).matches()){
+                val dlgAlert: AlertDialog.Builder = AlertDialog.Builder(this)
+                dlgAlert.setMessage(getString(R.string.bad_email_format))
+                dlgAlert.setTitle(getString(R.string.login_error))
+                dlgAlert.setPositiveButton(R.string.OK, null)
+                dlgAlert.setCancelable(true)
+                dlgAlert.create().show()
+            }else if(etPassword.text.toString().trim().length < 6){
+                val dlgAlert: AlertDialog.Builder = AlertDialog.Builder(this)
+                dlgAlert.setMessage("Příliš krátké heslo")
+                dlgAlert.setTitle("Chyba registrace")
+                dlgAlert.setPositiveButton(R.string.OK, null)
+                dlgAlert.setCancelable(true)
+                dlgAlert.create().show()
+            }else createAccount(etEmail.text.toString().trim(),etPassword.text.toString().trim())
         }
     }
-
-
 
 
     private fun createAccount(email: String, password: String) {
@@ -39,8 +60,8 @@ class RegisterUser: AppCompatActivity() {
                     val intent = Intent(this, LoginActivity::class.java)
                     startActivity(intent)
                 } else {
-                    Log.w("Register User:", "createUserWithEmail:failure", task.exception)
-                    Toast.makeText(applicationContext, "Register user failed.", Toast.LENGTH_LONG).show()
+//                    Log.w("Register User:", "createUserWithEmail:failure", task.exception)
+                    Toast.makeText(applicationContext, "Register user failed. " + task.exception?.message, Toast.LENGTH_LONG).show()
 //                    updateUI(null)
                 }
             }

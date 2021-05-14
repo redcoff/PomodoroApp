@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.pomodoroapp.R
+import com.example.pomodoroapp.model.SavedPreference
 import com.example.pomodoroapp.ui.Control
 import com.example.pomodoroapp.ui.LoginActivity
 import com.example.pomodoroapp.ui.MainActivity
@@ -30,30 +31,18 @@ class MyAccountFragment : Fragment() {
         auth = FirebaseAuth.getInstance();
 
         val view: View = inflater.inflate(R.layout.activity_my_account, container, false)
-        view.textView2.text = auth.currentUser?.displayName
-        view.textView3.text = auth.currentUser?.email
-
-
-
-//        val imageref = Firebase.storage.reference.child(auth.currentUser?.photoUrl.toString())
-//        imageref.downloadUrl.addOnSuccessListener {Uri->
-//            val imageURL = Uri.toString()
-//            Glide.with(this)
-//                .load(imageURL)
-//                .into(view.imageView2)
-//
-//        }
-
-
+        println("TEST : " + context?.let { SavedPreference.getUsername(it) } )
+        view.textView2.text = context?.let { SavedPreference.getUsername(it) }
+        view.textView3.text = context?.let { SavedPreference.getEmail(it) }
         view.logoutButton.setOnClickListener{
             auth.signOut()
             Firebase.auth.signOut()
+            context?.let { SavedPreference.setEmail(it,"" ) }
+            context?.let { SavedPreference.setUsername(it,"" ) }
             val intent= Intent(activity,LoginActivity::class.java)
             startActivity(intent)
         }
         return view
     }
-
-
 
 }

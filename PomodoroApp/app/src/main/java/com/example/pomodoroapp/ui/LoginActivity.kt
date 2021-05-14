@@ -3,7 +3,6 @@ package com.example.pomodoroapp.ui
 import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.provider.AlarmClock.EXTRA_MESSAGE
 import android.text.TextUtils
@@ -11,14 +10,17 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.pomodoroapp.R
+import com.example.pomodoroapp.model.SavedPreference
+import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -35,7 +37,8 @@ import kotlin.coroutines.CoroutineContext
 class LoginActivity : AppCompatActivity(), CoroutineScope {
     private var auth: FirebaseAuth? = null
     private var job: Job = Job()
-    private var googleClient: GoogleSignInClient?=null
+    private lateinit var googleClient: GoogleSignInClient
+    val Req_Code:Int=123
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -53,47 +56,70 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
             .build()
         val mGoogleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(this, gso);
         googleClient = mGoogleSignInClient
+        googleClient.signOut();
 
         val signInButton = findViewById<SignInButton>(R.id.sign_in_button)
         signInButton.setSize(SignInButton.SIZE_STANDARD)
 
         signInButton.setOnClickListener{
-            val signInIntent = mGoogleSignInClient.signInIntent
-            startActivityForResult(signInIntent, 1)
-
+            signInGoogle()
         }
         addAccount.setOnClickListener{
             val intent = Intent(this, RegisterUser::class.java)
             startActivity(intent)
         }
-
-        // it is a class to notify the user of events that happen.
-        // This is how you tell the user that something has happened in the
-        // background.
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-
-
-
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode==Req_Code){
+            val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
+            handleResult(task)
+        }
+    }
+    private fun handleResult(completedTask: Task<GoogleSignInAccount>){
+        try {
+            val account: GoogleSignInAccount? =completedTask.getResult(ApiException::class.java)
+            if (account != null) {
+                UpdateUI(account)
+            }
+        } catch (e:ApiException){
+            Toast.makeText(this,e.toString(),Toast.LENGTH_SHORT).show()
+        }
+    }
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == 1) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                // Google Sign In was successful, authenticate with Firebase
-                val account = task.getResult(ApiException::class.java)!!
-                Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
-                firebaseAuthWithGoogle(account.idToken!!)
-            } catch (e: ApiException) {
-                // Google Sign In failed, update UI appropriately
-                Log.w(TAG, "Google sign in failed", e)
+    private fun UpdateUI(account: GoogleSignInAccount){
+        val credential= GoogleAuthProvider.getCredential(account.idToken,null)
+        auth?.signInWithCredential(credential)?.addOnCompleteListener {task->
+            if(task.isSuccessful) {
+                SavedPreference.setEmail(this,account.email.toString())
+                SavedPreference.setUsername(this,account.displayName.toString())
+                val intent = Intent(this, Control::class.java)
+                startActivity(intent)
+                finish()
             }
         }
     }
+
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//
+//        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+//        if (requestCode == 1) {
+//            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+//            try {
+//                // Google Sign In was successful, authenticate with Firebase
+//                val account = task.getResult(ApiException::class.java)!!
+//                Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
+//                firebaseAuthWithGoogle(account.idToken!!)
+//            } catch (e: ApiException) {
+//                // Google Sign In failed, update UI appropriately
+//                Log.w(TAG, "Google sign in failed", e)
+//            }
+//        }
+//    }
 
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
@@ -103,7 +129,7 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
                     Log.d(TAG, "signInWithCredential:success")
                     val user = auth?.currentUser
                     val intent = Intent(this, Control::class.java)
-                     startActivity(intent)
+                    startActivity(intent)
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
@@ -111,6 +137,12 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
                 }
             }
     }
+
+    private  fun signInGoogle(){
+        val signInIntent:Intent= googleClient.signInIntent
+        startActivityForResult(signInIntent,Req_Code)
+    }
+
 
     override fun onStart() {
         super.onStart();
@@ -179,11 +211,12 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
             ).show()
             val currentUser = auth!!.currentUser
             Log.d("Login:", currentUser.uid)
+            currentUser?.email?.let { SavedPreference.setEmail(this, it) }
+            currentUser?.displayName?.let { SavedPreference.setUsername(this, it) }
             val intent = Intent(this, Control::class.java).apply {
                 putExtra(EXTRA_MESSAGE, currentUser)}
             startActivity(intent)
             return data
-
         }catch (e: Exception){
             Log.w(TAG, "signInWithEmail:failure", e)
             Toast.makeText(applicationContext, "Authentication failed.", Toast.LENGTH_LONG).show()
@@ -225,7 +258,7 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
 
 
 
-/* MRDKA
+/*
     private fun createNotif() {
 
         val mNotificationManager: NotificationManager = this.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
