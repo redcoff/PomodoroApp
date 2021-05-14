@@ -1,6 +1,7 @@
 package com.example.pomodoroapp.adapter
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,8 @@ import com.example.pomodoroapp.adapter.MainTaskListAdapter.TextViewHolder.Compan
 import com.example.pomodoroapp.databinding.MainTaskItemBinding
 import com.example.pomodoroapp.model.MainTask
 import com.example.pomodoroapp.model.Task
+import com.example.pomodoroapp.ui.EditMainTaskActivity
+import com.example.pomodoroapp.ui.EditMinorTaskActivity
 import kotlinx.android.synthetic.main.main_task_header.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -98,6 +101,14 @@ class MainTaskListAdapter(val clickListener: MainTaskListener) :  ListAdapter<Da
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = MainTaskItemBinding.inflate(layoutInflater, parent, false)
                 return TaskViewHolder(binding)
+            }
+        }
+
+        init {
+            binding.cardItems.setOnClickListener {
+                val int = Intent(it.context, EditMainTaskActivity::class.java)
+                int.putExtra("taskName", binding.taskName.text.toString())
+                it.context.startActivity(int)
             }
         }
     }

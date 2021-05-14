@@ -18,8 +18,8 @@ class MinorTaskViewModel (application: Application) : BaseViewModel(application)
         getAllIndelibleTasks()
         getAllDeferrableTasks()
 
-        listenToIndelibleMinorTasks()
         listenToDefferableTasks()
+        listenToIndelibleMinorTasks()
 
     }
 
