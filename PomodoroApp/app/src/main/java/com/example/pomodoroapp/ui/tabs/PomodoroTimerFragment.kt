@@ -28,7 +28,10 @@ import com.example.pomodoroapp.R
 import com.example.pomodoroapp.databinding.ActivityPomodorotimerBinding
 import com.example.pomodoroapp.ui.AddMinorTaskActivity
 import com.example.pomodoroapp.ui.LoginActivity
+import com.example.pomodoroapp.utilities.Constants.BREAKTIME
+import com.example.pomodoroapp.utilities.Constants.POMODOROTIME
 import com.example.pomodoroapp.viewmodel.PomodoroViewModel
+import kotlinx.android.synthetic.main.activity_pomodorotimer.*
 import java.util.stream.Collectors
 
 class PomodoroTimerFragment : Fragment() {
@@ -43,47 +46,6 @@ class PomodoroTimerFragment : Fragment() {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = DataBindingUtil.inflate(inflater, R.layout.activity_pomodorotimer, container, false)
-        pomodoroViewModel.timer.value = object : CountDownTimer((pomodoroViewModel.getCurrentStateTime() * 1000).toLong(), 1000) {
-
-            override fun onTick(millisUntilFinished: Long) {
-
-                if(pomodoroViewModel.counter.value?.div(60)!! >=10 ) {
-                    if(pomodoroViewModel.counter.value?.rem(60)!! < 10){
-                        "${(pomodoroViewModel.counter.value?.div(60))}:0${((pomodoroViewModel.counter.value?.rem(
-                            60
-                        )))}".also { pomodoroViewModel.timerInfo.value = it }
-                    }else{
-                        "${(pomodoroViewModel.counter.value?.div(60))}:${((pomodoroViewModel.counter.value?.rem(
-                            60
-                        )))}".also { pomodoroViewModel.timerInfo.value = it }
-                    }
-                }else{
-                    if(pomodoroViewModel.counter.value?.rem(60)!! < 10){
-                        "0${(pomodoroViewModel.counter.value?.div(60))}:0${((pomodoroViewModel.counter.value?.rem(
-                            60
-                        )))}".also { pomodoroViewModel.timerInfo.value = it }
-                    }else{
-                        "0${(pomodoroViewModel.counter.value?.div(60))}:${((pomodoroViewModel.counter.value?.rem(
-                            60
-                        )))}".also { pomodoroViewModel.timerInfo.value = it }
-                    }
-                }
-                pomodoroViewModel.counter.value = pomodoroViewModel.counter.value?.minus(1)
-                pomodoroViewModel.progress.value = 100 - ((millisUntilFinished/(10 * pomodoroViewModel.getCurrentStateTime()))).toInt()
-            }
-            override fun onFinish() {
-                "00:00".also { pomodoroViewModel.timerInfo.value = it }
-                pomodoroViewModel.pomodoroCounter++
-
-                if(!pomodoroViewModel.isBreak){
-                    println( "ascascsacasc" + pomodoroViewModel.progress.value)
-                    createNotification()
-                    pomodoroViewModel.updateTaskPomodoro(pomodoroViewModel.currenttask)
-                }
-                pomodoroViewModel.isBreak = !pomodoroViewModel.isBreak
-            }
-        }
-
 
         binding.startPomodoro.setOnClickListener{
             if(pomodoroViewModel.currenttask == ""){
@@ -99,6 +61,7 @@ class PomodoroTimerFragment : Fragment() {
         binding.zapsatUkol.setOnClickListener{
             startActivity(Intent(requireContext(), AddMinorTaskActivity::class.java))
         }
+        pomodoroViewModel.counter.value = pomodoroViewModel.getCurrentStateTime()
 
         return binding.root
     }
@@ -159,42 +122,44 @@ class PomodoroTimerFragment : Fragment() {
     private fun startTimeCounter() {
         pomodoroViewModel.timer.value = object : CountDownTimer((pomodoroViewModel.getCurrentStateTime() * 1000).toLong(), 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                if(pomodoroViewModel.counter.value?.div(60)!! >=10 ) {
-                    if(pomodoroViewModel.counter.value?.rem(60)!! < 10){
-                        "${(pomodoroViewModel.counter.value?.div(60))}:0${((pomodoroViewModel.counter.value?.rem(
-                            60
-                        )))}".also { pomodoroViewModel.timerInfo.value = it }
-                    }else{
-                        "${(pomodoroViewModel.counter.value?.div(60))}:${((pomodoroViewModel.counter.value?.rem(
-                            60
-                        )))}".also { pomodoroViewModel.timerInfo.value = it }
-                    }
-                }else{
-                    if(pomodoroViewModel.counter.value?.rem(60)!! < 10){
-                        "0${(pomodoroViewModel.counter.value?.div(60))}:0${((pomodoroViewModel.counter.value?.rem(
-                            60
-                        )))}".also { pomodoroViewModel.timerInfo.value = it }
-                    }else{
-                        "0${(pomodoroViewModel.counter.value?.div(60))}:${((pomodoroViewModel.counter.value?.rem(
-                            60
-                        )))}".also { pomodoroViewModel.timerInfo.value = it }
-                    }
-                }
-
+                setTimer()
                 pomodoroViewModel.counter.value = pomodoroViewModel.counter.value?.minus(1)
-                pomodoroViewModel.progress.value = 99 - ((millisUntilFinished/(10 * pomodoroViewModel.getCurrentStateTime()))).toInt()
+                pomodoroViewModel.progress.value = 100 - ((millisUntilFinished/(10 * pomodoroViewModel.getCurrentStateTime()))).toInt()
 
+                println("milis="+ millisUntilFinished + "progress="+pomodoroViewModel.progress.value + "MAX="+pomodoroViewModel.getCurrentStateTime() )
             }
+
+
+
+
             override fun onFinish() {
                 "00:00".also { pomodoroViewModel.timerInfo.value = it }
                 pomodoroViewModel.pomodoroCounter++
+                pomodoroViewModel.progress.value=100
 
                 if(!pomodoroViewModel.isBreak){
                     createNotification()
                     pomodoroViewModel.updateTaskPomodoro(pomodoroViewModel.currenttask)
                 }
                 pomodoroViewModel.isBreak = !pomodoroViewModel.isBreak
+                pomodoroViewModel.counter.value = pomodoroViewModel.getCurrentStateTime()
+                when {
+                    pomodoroViewModel.getCurrentStateTime() == POMODOROTIME -> {
+                        faze.text = "Práce"
+                    }
+                    pomodoroViewModel.getCurrentStateTime() == BREAKTIME -> {
+                        faze.text = "Přestávka"
+                    }
+                    else -> {
+                        faze.text = "Dlouhá Přestávka"
+                    }
+                }
+                faze.visibility = View.VISIBLE
+                val t = Toast.makeText(requireContext(),"Pomodoro dokončeno, čas na přestávku.", Toast.LENGTH_LONG)
+                t.show()
             }
+
+
         }
 
         pomodoroViewModel.timer.value?.start()
@@ -204,14 +169,27 @@ class PomodoroTimerFragment : Fragment() {
     private fun startPomodoro() {
         pomodoroViewModel.progress.value = 0
         if (!pomodoroViewModel.running.value!!) {
-            pomodoroViewModel.counter.value = pomodoroViewModel.getCurrentStateTime()
             startTimeCounter()
             pomodoroViewModel.stopPomodoroVisibility.value = 0
             pomodoroViewModel.addTaskVisibility.value = 0
             pomodoroViewModel.remainingVisibility.value = 0
             pomodoroViewModel.startPomodoroVisibility.value = 8
+            when {
+                pomodoroViewModel.getCurrentStateTime() == POMODOROTIME -> {
+                    faze.text = "Práce"
+                }
+                pomodoroViewModel.getCurrentStateTime() == BREAKTIME -> {
+                    faze.text = "Přestávka"
+                }
+                else -> {
+                    faze.text = "Dlouhá Přestávka"
+                }
+            }
+            faze.visibility = View.VISIBLE
+
         }
     }
+
 
     private fun cancelPomodoro(){
         pomodoroViewModel.progress.value = 0
@@ -221,7 +199,10 @@ class PomodoroTimerFragment : Fragment() {
         pomodoroViewModel.addTaskVisibility.value = 8
         pomodoroViewModel.remainingVisibility.value = 8
         pomodoroViewModel.startPomodoroVisibility.value = 0
-        pomodoroViewModel.timerInfo.value = "${(pomodoroViewModel.counter.value?.div(60))}:${((pomodoroViewModel.counter.value?.rem(60)))}"
+
+        pomodoroViewModel.counter.value = pomodoroViewModel.getCurrentStateTime()
+        setTimer()
+//        pomodoroViewModel.timerInfo.value = "${(pomodoroViewModel.counter.value?.div(60))}:${((pomodoroViewModel.counter.value?.rem(60)))}"
     }
 
     private fun createNotification(){
@@ -257,5 +238,28 @@ class PomodoroTimerFragment : Fragment() {
         mNotificationManager.notify(0, mBuilder.build())
     }
 
+    private fun setTimer(){
+        if(pomodoroViewModel.counter.value?.div(60)!! >=10 ) {
+            if(pomodoroViewModel.counter.value?.rem(60)!! < 10){
+                "${(pomodoroViewModel.counter.value?.div(60))}:0${((pomodoroViewModel.counter.value?.rem(
+                    60
+                )))}".also { pomodoroViewModel.timerInfo.value = it }
+            }else{
+                "${(pomodoroViewModel.counter.value?.div(60))}:${((pomodoroViewModel.counter.value?.rem(
+                    60
+                )))}".also { pomodoroViewModel.timerInfo.value = it }
+            }
+        }else{
+            if(pomodoroViewModel.counter.value?.rem(60)!! < 10){
+                "0${(pomodoroViewModel.counter.value?.div(60))}:0${((pomodoroViewModel.counter.value?.rem(
+                    60
+                )))}".also { pomodoroViewModel.timerInfo.value = it }
+            }else{
+                "0${(pomodoroViewModel.counter.value?.div(60))}:${((pomodoroViewModel.counter.value?.rem(
+                    60
+                )))}".also { pomodoroViewModel.timerInfo.value = it }
+            }
+        }
+    }
 
 }

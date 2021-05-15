@@ -3,6 +3,7 @@ package com.example.pomodoroapp.ui
 import android.app.Activity
 import android.os.Bundle
 import android.widget.CompoundButton
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -31,16 +32,22 @@ class AddMinorTaskActivity : AppCompatActivity() {
         }
 
         binding.submitMinorTask.setOnClickListener{
-            val type:MinorTask.Type = if(binding.minorTaskTypeButton.isChecked) MinorTask.Type.INDELIBLE
-            else MinorTask.Type.DEFERRABLE
-            addMinorTaskViewModel.insert(
-                MinorTask(
-                    type,
-                    binding.etTextMinorTask.text.toString(),
-                    addMinorTaskViewModel.auth.currentUser?.uid ?: "",
+            if(binding.etTextMinorTask.text.toString().isEmpty()){
+                val toast= Toast.makeText(this,"Vyplňte jméno tasku.", Toast.LENGTH_SHORT)
+                toast.show()
+            }else{
+                val type:MinorTask.Type = if(binding.minorTaskTypeButton.isChecked) MinorTask.Type.INDELIBLE
+                else MinorTask.Type.DEFERRABLE
+                addMinorTaskViewModel.insert(
+                    MinorTask(
+                        type,
+                        binding.etTextMinorTask.text.toString(),
+                        addMinorTaskViewModel.auth.currentUser?.uid ?: "",
+                    )
                 )
-            )
-            super.onBackPressed();
+                super.onBackPressed();
+            }
+
         }
 
         setResult(Activity.RESULT_OK)

@@ -21,9 +21,10 @@ class RegisterUser: AppCompatActivity() {
         setContentView(R.layout.activity_register_user)
         auth = FirebaseAuth.getInstance()
         etPassword.transformationMethod = PasswordTransformationMethod();
+        etPassword2.transformationMethod = PasswordTransformationMethod();
 
         btnSubmit.setOnClickListener{
-            if(etPassword.text.toString().trim().isEmpty() || etEmail.text.toString().trim().isEmpty()){
+            if(etPassword.text.toString().trim().isEmpty() || etEmail.text.toString().trim().isEmpty() || etPassword2.text.toString().trim().isEmpty()){
                 val dlgAlert: AlertDialog.Builder = AlertDialog.Builder(this)
                 dlgAlert.setMessage(getString(R.string.bad_login))
                 dlgAlert.setTitle(getString(R.string.add_credentials))
@@ -40,6 +41,13 @@ class RegisterUser: AppCompatActivity() {
             }else if(etPassword.text.toString().trim().length < 6){
                 val dlgAlert: AlertDialog.Builder = AlertDialog.Builder(this)
                 dlgAlert.setMessage("Příliš krátké heslo")
+                dlgAlert.setTitle("Chyba registrace")
+                dlgAlert.setPositiveButton(R.string.OK, null)
+                dlgAlert.setCancelable(true)
+                dlgAlert.create().show()
+            }else if(etPassword.text.toString() != etPassword2.text.toString()){
+                val dlgAlert: AlertDialog.Builder = AlertDialog.Builder(this)
+                dlgAlert.setMessage("Hesla se neshodují")
                 dlgAlert.setTitle("Chyba registrace")
                 dlgAlert.setPositiveButton(R.string.OK, null)
                 dlgAlert.setCancelable(true)

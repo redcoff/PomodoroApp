@@ -68,13 +68,15 @@ class PomodoroViewModel(application: Application) : BaseViewModel(application)  
             .get().addOnSuccessListener { documents ->
                 for (document in documents) {
                     var pomodoros = 0
+
                     firestore.collection(Constants.TASKSCOLLECTION).document(document.id).get().addOnSuccessListener { documentSnapshot ->
                         val task = documentSnapshot.toObject<MainTask>()
                         if (task != null) {
                             pomodoros = task.pomodoros
+                            firestore.collection(Constants.TASKSCOLLECTION).document(document.id).update("pomodoros",pomodoros+1)
                         }
                     }
-                    firestore.collection(Constants.TASKSCOLLECTION).document(document.id).update("pomodoros",pomodoros+1)
+
                 }
             }
             .addOnFailureListener { exception ->

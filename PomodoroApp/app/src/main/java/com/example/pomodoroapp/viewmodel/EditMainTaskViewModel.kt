@@ -63,7 +63,7 @@ class EditMainTaskViewModel  (application: Application) : BaseViewModel(applicat
                             date.value = task.date?.toDate()
                         }
                         if (task != null) {
-                            pomodoros.value = task.getPomodoroFormat()
+                            pomodoros.value = task.pomodoroFormat()
                         }
                     }
 

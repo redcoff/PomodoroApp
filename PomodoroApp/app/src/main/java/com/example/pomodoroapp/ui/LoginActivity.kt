@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.pomodoroapp.R
 import com.example.pomodoroapp.model.SavedPreference
-import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -38,7 +37,7 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
     private var auth: FirebaseAuth? = null
     private var job: Job = Job()
     private lateinit var googleClient: GoogleSignInClient
-    val Req_Code:Int=123
+    private val Req_Code:Int=123
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -75,8 +74,10 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode==Req_Code){
-            val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
-            handleResult(task)
+            if(resultCode == Activity.RESULT_OK){
+                val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
+                handleResult(task)
+            }
         }
     }
     private fun handleResult(completedTask: Task<GoogleSignInAccount>){
@@ -85,17 +86,17 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
             if (account != null) {
                 UpdateUI(account)
             }
-        } catch (e:ApiException){
-            Toast.makeText(this,e.toString(),Toast.LENGTH_SHORT).show()
+        } catch (e: ApiException){
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun UpdateUI(account: GoogleSignInAccount){
-        val credential= GoogleAuthProvider.getCredential(account.idToken,null)
-        auth?.signInWithCredential(credential)?.addOnCompleteListener {task->
+        val credential= GoogleAuthProvider.getCredential(account.idToken, null)
+        auth?.signInWithCredential(credential)?.addOnCompleteListener { task->
             if(task.isSuccessful) {
-                SavedPreference.setEmail(this,account.email.toString())
-                SavedPreference.setUsername(this,account.displayName.toString())
+                SavedPreference.setEmail(this, account.email.toString())
+                SavedPreference.setUsername(this, account.displayName.toString())
                 val intent = Intent(this, Control::class.java)
                 startActivity(intent)
                 finish()
@@ -140,7 +141,7 @@ class LoginActivity : AppCompatActivity(), CoroutineScope {
 
     private  fun signInGoogle(){
         val signInIntent:Intent= googleClient.signInIntent
-        startActivityForResult(signInIntent,Req_Code)
+        startActivityForResult(signInIntent, Req_Code)
     }
 
 

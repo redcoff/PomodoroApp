@@ -8,9 +8,9 @@ data class MainTask(
     val uid: String = "",
     val pomodoros:Int = 0,
     val description:String = "",
-    val date:Timestamp? = null,
+    val date:Timestamp? = null
 ){
-    fun getPomodoroFormat(): String {
+    fun pomodoroFormat(): String {
         var format = ""
         for(i in 1..pomodoros){
             format += "|"
