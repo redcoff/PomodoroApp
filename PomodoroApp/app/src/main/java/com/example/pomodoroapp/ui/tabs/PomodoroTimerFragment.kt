@@ -36,6 +36,7 @@ import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.activity_pomodorotimer.*
 import java.util.stream.Collectors
 import android.provider.Settings
+import androidx.fragment.app.activityViewModels
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.pomodoroapp.service.LocationService
 import com.example.pomodoroapp.utilities.SharedPreferenceUtil
@@ -43,7 +44,7 @@ import com.example.pomodoroapp.utilities.toText
 import com.google.android.material.snackbar.Snackbar
 
 class PomodoroTimerFragment : Fragment(), SharedPreferences.OnSharedPreferenceChangeListener {
-    private val pomodoroViewModel: PomodoroViewModel by viewModels()
+    private val pomodoroViewModel: PomodoroViewModel by activityViewModels()
 
     private var _binding: ActivityPomodorotimerBinding? = null
     private val binding get() = _binding!!
@@ -91,7 +92,10 @@ class PomodoroTimerFragment : Fragment(), SharedPreferences.OnSharedPreferenceCh
         super.onViewCreated(view, savedInstanceState)
         setBinding()
         binding.lifecycleOwner = this
-
+        if (!pomodoroViewModel.running.value!!) {
+            pomodoroViewModel.counter.value = pomodoroViewModel.getCurrentStateTime()
+            setTimer()
+        }
         binding.startPomodoro.setOnClickListener {
             if (pomodoroViewModel.currenttask == "") {
                 val t =
@@ -106,7 +110,7 @@ class PomodoroTimerFragment : Fragment(), SharedPreferences.OnSharedPreferenceCh
         binding.zapsatUkol.setOnClickListener {
             startActivity(Intent(requireContext(), AddMinorTaskActivity::class.java))
         }
-        pomodoroViewModel.counter.value = POMODOROTIME
+
     }
 
 
@@ -193,7 +197,6 @@ class PomodoroTimerFragment : Fragment(), SharedPreferences.OnSharedPreferenceCh
             foregroundOnlyLocationServiceBound = false
         }
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
-
         super.onStop()
     }
 

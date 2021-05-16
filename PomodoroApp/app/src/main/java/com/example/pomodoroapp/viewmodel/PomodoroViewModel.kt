@@ -62,7 +62,6 @@ class PomodoroViewModel(application: Application) : BaseViewModel(application)  
 
     // full pomodoro time (25 min) or break (5 min) or full break (30 min)
     fun getCurrentStateTime(): Int {
-        println(pomodoroCounter)
         return when {
             pomodoroCounter % 8 == 0 && pomodoroCounter > 1 -> {
                 Constants.FULLBREAKTIME

@@ -1,11 +1,16 @@
 package com.example.pomodoroapp.ui
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController
 import androidx.viewpager.widget.ViewPager
 import com.example.pomodoroapp.R
+import com.example.pomodoroapp.viewmodel.MainTaskViewModel
+import com.example.pomodoroapp.viewmodel.MinorTaskViewModel
+import com.example.pomodoroapp.viewmodel.PomodoroViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
@@ -17,7 +22,13 @@ class Control : AppCompatActivity() {
         private lateinit var tabLayout: TabLayout
         lateinit var viewPager: ViewPager
         private lateinit var mGoogleSignInClient: GoogleSignInClient
-        private val auth by lazy {
+
+        private val pomodoroViewModel: PomodoroViewModel by viewModels()
+        private val mainTaskViewModel: MainTaskViewModel by viewModels()
+        private val minorTaskViewModel: MinorTaskViewModel by viewModels()
+
+
+    private val auth by lazy {
               FirebaseAuth.getInstance()
         }
 
@@ -60,50 +71,5 @@ class Control : AppCompatActivity() {
 
         }
 
-
-
-//
-//            when (navController.get.getItemId()) {
-//                R.id.navigation_home -> {
-//                    mTextMessage.setText(R.string.title_home)
-//                    switchToFragment1()
-//                }
-//                R.id.navigation_dashboard -> {
-//                    mTextMessage.setText(R.string.title_dashboard)
-//                    switchToFragment2()
-//                }
-//                R.id.navigation_notifications -> {
-//                    mTextMessage.setText(R.string.title_notifications)
-//                    switchToFragment3()
-//                }
-//            }
-
-//            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                .requestIdToken(getString(R.string.default_web_client_id))
-//                .requestEmail()
-//                .build()
-//            mGoogleSignInClient= GoogleSignIn.getClient(this, gso)
-
-//            tabLayout = findViewById(R.id.tabLayout)
-//            viewPager = findViewById(R.id.viewPager)
-//            tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.account))
-//            tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.timer))
-//            tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.main_tasks))
-//            tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.minor_tasks))
-//            tabLayout.tabGravity = TabLayout.GRAVITY_FILL
-//            val adapter = MyAdapter(this, supportFragmentManager,
-//                tabLayout.tabCount)
-//            viewPager.adapter = adapter
-//            // set default page
-//            viewPager.setCurrentItem(1, true)
-//            tabLayout.getTabAt(1)?.select();
-//            viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
-//            tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-//                override fun onTabSelected(tab: TabLayout.Tab) {
-//                    viewPager.currentItem = tab.position
-//                }
-//                override fun onTabUnselected(tab: TabLayout.Tab) {}
-//                override fun onTabReselected(tab: TabLayout.Tab) {}
-//            })
 
 }

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.*
 import com.example.pomodoroapp.R
@@ -28,7 +29,7 @@ import kotlinx.android.synthetic.main.activity_minor_tasks.view.*
 
 class MinorTasksFragment : Fragment() {
 
-    private val minorTaskViewModel: MinorTaskViewModel by viewModels()
+    private val minorTaskViewModel: MinorTaskViewModel by activityViewModels()
     private var _binding: ActivityMinorTasksBinding? = null
     private val binding get() = _binding!!
 

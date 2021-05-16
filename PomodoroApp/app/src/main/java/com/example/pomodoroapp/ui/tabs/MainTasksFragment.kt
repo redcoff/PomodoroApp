@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController
@@ -25,7 +26,7 @@ import kotlinx.android.synthetic.main.activity_control.*
 
 class MainTasksFragment : Fragment() {
 
-    private val mainTaskViewModel: MainTaskViewModel by viewModels()
+    private val mainTaskViewModel: MainTaskViewModel by activityViewModels()
 
     private var _binding: ActivityMainTasksBinding? = null
     private val binding get() = _binding!!
