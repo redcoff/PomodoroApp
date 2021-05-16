@@ -178,6 +178,7 @@ class PomodoroTimerFragment : Fragment() {
                 pomodoroViewModel.progress.value=100
 
                 if(!pomodoroViewModel.isBreak){
+                    getLocation()
                     createNotification()
                     pomodoroViewModel.updateTaskPomodoro(pomodoroViewModel.currenttask)
                 }
