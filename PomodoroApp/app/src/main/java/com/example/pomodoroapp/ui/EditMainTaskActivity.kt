@@ -70,8 +70,8 @@ class EditMainTaskActivity: AppCompatActivity() {
         }
 
         editMainTaskViewModel.lat.observe(this) {
-            if(editMainTaskViewModel.lat.value != 0.0 && editMainTaskViewModel.lat.value != 0.0) {
-                binding.showTaskMap.text = "Zobrazit poslední pomodoro na mapě"
+            if(editMainTaskViewModel.lat.value != 0.0 && editMainTaskViewModel.lat.value != 0.0 && editMainTaskViewModel.pomodoros.value != "") {
+                binding.showTaskMap.text = "Zobrazit na mapě"
                 binding.showTaskMap.isEnabled = true
                 binding.showTaskMap.isClickable = true
 
@@ -81,6 +81,9 @@ class EditMainTaskActivity: AppCompatActivity() {
                     intent.putExtra("long", editMainTaskViewModel.long.value)
                     startActivity(intent)
                 }
+            }
+            else if(editMainTaskViewModel.pomodoros.value != "") {
+                binding.showTaskMap.text = "Není k dispozici poloha pro poslední pomodoro."
             }
         }
 

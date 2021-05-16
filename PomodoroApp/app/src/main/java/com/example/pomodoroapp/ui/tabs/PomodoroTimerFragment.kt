@@ -1,19 +1,19 @@
 package com.example.pomodoroapp.ui.tabs
 
 import android.Manifest
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
+import android.annotation.SuppressLint
+import android.app.*
+import android.content.*
+import android.content.ContentValues.TAG
 import android.content.Context.NOTIFICATION_SERVICE
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
-import android.graphics.Color
+import android.location.Location
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.IBinder
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,23 +24,54 @@ import androidx.core.app.NotificationCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.pomodoroapp.BuildConfig
 import com.example.pomodoroapp.R
 import com.example.pomodoroapp.databinding.ActivityPomodorotimerBinding
 import com.example.pomodoroapp.ui.AddMinorTaskActivity
 import com.example.pomodoroapp.ui.LoginActivity
-import com.example.pomodoroapp.utilities.Constants
 import com.example.pomodoroapp.utilities.Constants.BREAKTIME
 import com.example.pomodoroapp.utilities.Constants.POMODOROTIME
 import com.example.pomodoroapp.viewmodel.PomodoroViewModel
 import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.activity_pomodorotimer.*
 import java.util.stream.Collectors
+import android.provider.Settings
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.example.pomodoroapp.service.LocationService
+import com.example.pomodoroapp.utilities.SharedPreferenceUtil
+import com.example.pomodoroapp.utilities.toText
+import com.google.android.material.snackbar.Snackbar
 
-class PomodoroTimerFragment : Fragment() {
+class PomodoroTimerFragment : Fragment(), SharedPreferences.OnSharedPreferenceChangeListener {
     private val pomodoroViewModel: PomodoroViewModel by viewModels()
 
     private var _binding: ActivityPomodorotimerBinding? = null
     private val binding get() = _binding!!
+
+    private var foregroundOnlyLocationServiceBound = false
+    private val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
+
+    // Provides location updates for while-in-use feature.
+    private var foregroundOnlyLocationService: LocationService? = null
+
+    // Listens for location broadcasts from ForegroundOnlyLocationService.
+    private lateinit var foregroundOnlyBroadcastReceiver: ForegroundOnlyBroadcastReceiver
+
+    private lateinit var sharedPreferences: SharedPreferences
+
+    private val foregroundOnlyServiceConnection = object : ServiceConnection {
+
+        override fun onServiceConnected(name: ComponentName, service: IBinder) {
+            val binder = service as LocationService.LocalBinder
+            foregroundOnlyLocationService = binder.service
+            foregroundOnlyLocationServiceBound = true
+        }
+
+        override fun onServiceDisconnected(name: ComponentName) {
+            foregroundOnlyLocationService = null
+            foregroundOnlyLocationServiceBound = false
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +82,7 @@ class PomodoroTimerFragment : Fragment() {
             DataBindingUtil.inflate(inflater, R.layout.activity_pomodorotimer, container, false)
         pomodoroViewModel.fusedLocationClient =
             LocationServices.getFusedLocationProviderClient(requireContext())
+        //getLocation()
         return binding.root
     }
 
@@ -78,7 +110,7 @@ class PomodoroTimerFragment : Fragment() {
     }
 
 
-    private fun setBinding(){
+    private fun setBinding() {
         binding.timer = pomodoroViewModel.timerInfo.value
         pomodoroViewModel.timerInfo.observe(viewLifecycleOwner) {
             binding.timer = pomodoroViewModel.timerInfo.value
@@ -106,7 +138,7 @@ class PomodoroTimerFragment : Fragment() {
 
         pomodoroViewModel.allTasks.observe(viewLifecycleOwner) {
             pomodoroViewModel.getAllMainTasks()
-            if(pomodoroViewModel.allTasks.value != null) {
+            if (pomodoroViewModel.allTasks.value != null) {
                 val items = pomodoroViewModel.allTasks.value!!
                     .stream()
                     .map { v -> v.name }
@@ -122,22 +154,112 @@ class PomodoroTimerFragment : Fragment() {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+        sharedPreferences.getBoolean(SharedPreferenceUtil.KEY_FOREGROUND_ENABLED, false)
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+
+        val serviceIntent = Intent(requireContext(), LocationService::class.java)
+        context?.bindService(serviceIntent, foregroundOnlyServiceConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        foregroundOnlyBroadcastReceiver = ForegroundOnlyBroadcastReceiver()
+        sharedPreferences =
+            context?.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)!!
+    }
+
+    override fun onResume() {
+        super.onResume()
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
+            foregroundOnlyBroadcastReceiver,
+            IntentFilter(
+                LocationService.ACTION_FOREGROUND_ONLY_LOCATION_BROADCAST
+            )
+        )
+    }
+
+    override fun onPause() {
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(
+            foregroundOnlyBroadcastReceiver
+        )
+        super.onPause()
+    }
+
+    override fun onStop() {
+        if (foregroundOnlyLocationServiceBound) {
+            context?.unbindService(foregroundOnlyServiceConnection)
+            foregroundOnlyLocationServiceBound = false
+        }
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+
+        super.onStop()
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getLastLocation() {
+        pomodoroViewModel.fusedLocationClient.lastLocation
+            .addOnCompleteListener(requireActivity()) { task ->
+                if (task.isSuccessful && task.result != null) {
+
+                    pomodoroViewModel.locationLat = task.result.latitude
+                    pomodoroViewModel.locationLong = task.result.longitude
+
+
+                } else {
+                    Log.w(TAG, "getLastLocation:exception", task.exception)
+                    showMessage("Nemame pristup k poloze. Exception: " + task.exception)
+                }
+            }
+    }
+
+    private fun showSnackbar(
+        mainTextStringId: Int, actionStringId: Int,
+        listener: View.OnClickListener
+    ) {
+
+        Toast.makeText(requireContext(), getString(mainTextStringId), Toast.LENGTH_LONG).show()
+    }
+
+    private fun showMessage(text: String) {
+        Toast.makeText(requireContext(), text, Toast.LENGTH_LONG).show()
+    }
+
 
     private fun startTimeCounter() {
-        pomodoroViewModel.timer.value = object : CountDownTimer((pomodoroViewModel.getCurrentStateTime() * 1000).toLong(), 1000) {
+        pomodoroViewModel.timer.value = object :
+            CountDownTimer((pomodoroViewModel.getCurrentStateTime() * 1000).toLong(), 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 setTimer()
                 pomodoroViewModel.counter.value = pomodoroViewModel.counter.value?.minus(1)
-                pomodoroViewModel.progress.value = 100 - ((millisUntilFinished/(10 * pomodoroViewModel.getCurrentStateTime()))).toInt()
+                pomodoroViewModel.progress.value =
+                    100 - ((millisUntilFinished / (10 * pomodoroViewModel.getCurrentStateTime()))).toInt()
             }
+
             override fun onFinish() {
                 "00:00".also { pomodoroViewModel.timerInfo.value = it }
 
-                pomodoroViewModel.progress.value=100
+                pomodoroViewModel.progress.value = 100
                 pomodoroViewModel.pomodoroCounter++
 
-                if(!pomodoroViewModel.isBreak){
-                    getLocation()
+                if (!pomodoroViewModel.isBreak) {
+                    val enabled = sharedPreferences.getBoolean(
+                        SharedPreferenceUtil.KEY_FOREGROUND_ENABLED, false)
+
+                    if (enabled) {
+                        foregroundOnlyLocationService?.unsubscribeToLocationUpdates()
+                    } else {
+
+                        // TODO: Step 1.0, Review Permissions: Checks and requests if needed.
+                        if (foregroundPermissionApproved()) {
+                            foregroundOnlyLocationService?.subscribeToLocationUpdates()
+                                ?: Log.d(TAG, "Service Not Bound")
+                        } else {
+                            requestForegroundPermissions()
+                        }
+                    }
+                    getLastLocation()
                     createNotification()
                     pomodoroViewModel.updateTaskPomodoro(pomodoroViewModel.currenttask)
                 }
@@ -145,26 +267,30 @@ class PomodoroTimerFragment : Fragment() {
                 pomodoroViewModel.counter.value = pomodoroViewModel.getCurrentStateTime()
                 when {
                     pomodoroViewModel.getCurrentStateTime() == POMODOROTIME -> {
-                        faze?.let{
+                        faze?.let {
                             it.text = "Práce"
                         }
                     }
                     pomodoroViewModel.getCurrentStateTime() == BREAKTIME -> {
-                        faze?.let{
+                        faze?.let {
                             it.text = "Přestávka"
                         }
                     }
                     else -> {
-                        faze?.let{
+                        faze?.let {
                             it.text = "Dlouhá přestávka"
                         }
                     }
                 }
 
-                faze?.let{
+                faze?.let {
                     it.visibility = View.VISIBLE
                 }
-                val t = Toast.makeText(requireContext(),"Pomodoro dokončeno, čas na přestávku.", Toast.LENGTH_LONG)
+                val t = Toast.makeText(
+                    requireContext(),
+                    "Pomodoro dokončeno, čas na přestávku.",
+                    Toast.LENGTH_LONG
+                )
                 t.show()
             }
         }
@@ -185,7 +311,7 @@ class PomodoroTimerFragment : Fragment() {
             when {
                 pomodoroViewModel.getCurrentStateTime() == POMODOROTIME -> {
                     faze?.let {
-                     it.text = "Práce"
+                        it.text = "Práce"
                     }
                 }
                 pomodoroViewModel.getCurrentStateTime() == BREAKTIME -> {
@@ -200,14 +326,14 @@ class PomodoroTimerFragment : Fragment() {
                 }
             }
 
-            faze?.let{
+            faze?.let {
                 it.visibility = View.VISIBLE
             }
 
         }
     }
 
-    private fun cancelPomodoro(){
+    private fun cancelPomodoro() {
         pomodoroViewModel.progress.value = 0
         pomodoroViewModel.timer.value?.cancel()
         pomodoroViewModel.running.value = false
@@ -221,9 +347,10 @@ class PomodoroTimerFragment : Fragment() {
 //        pomodoroViewModel.timerInfo.value = "${(pomodoroViewModel.counter.value?.div(60))}:${((pomodoroViewModel.counter.value?.rem(60)))}"
     }
 
-    private fun createNotification(){
+    private fun createNotification() {
         val context = requireContext()
-        val mNotificationManager: NotificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val mNotificationManager: NotificationManager =
+            context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val mBuilder = NotificationCompat.Builder(context.applicationContext, "notify_001")
         val ii = Intent(context.applicationContext, LoginActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(context, 0, ii, 0)
@@ -254,41 +381,132 @@ class PomodoroTimerFragment : Fragment() {
         mNotificationManager.notify(0, mBuilder.build())
     }
 
-    private fun setTimer(){
-        if(pomodoroViewModel.counter.value?.div(60)!! >=10 ) {
-            if(pomodoroViewModel.counter.value?.rem(60)!! < 10){
-                "${(pomodoroViewModel.counter.value?.div(60))}:0${((pomodoroViewModel.counter.value?.rem(
-                    60
-                )))}".also { pomodoroViewModel.timerInfo.value = it }
-            }else{
-                "${(pomodoroViewModel.counter.value?.div(60))}:${((pomodoroViewModel.counter.value?.rem(
-                    60
-                )))}".also { pomodoroViewModel.timerInfo.value = it }
+    private fun setTimer() {
+        if (pomodoroViewModel.counter.value?.div(60)!! >= 10) {
+            if (pomodoroViewModel.counter.value?.rem(60)!! < 10) {
+                "${(pomodoroViewModel.counter.value?.div(60))}:0${
+                    ((pomodoroViewModel.counter.value?.rem(
+                        60
+                    )))
+                }".also { pomodoroViewModel.timerInfo.value = it }
+            } else {
+                "${(pomodoroViewModel.counter.value?.div(60))}:${
+                    ((pomodoroViewModel.counter.value?.rem(
+                        60
+                    )))
+                }".also { pomodoroViewModel.timerInfo.value = it }
             }
-        }else{
-            if(pomodoroViewModel.counter.value?.rem(60)!! < 10){
-                "0${(pomodoroViewModel.counter.value?.div(60))}:0${((pomodoroViewModel.counter.value?.rem(
-                    60
-                )))}".also { pomodoroViewModel.timerInfo.value = it }
-            }else{
-                "0${(pomodoroViewModel.counter.value?.div(60))}:${((pomodoroViewModel.counter.value?.rem(
-                    60
-                )))}".also { pomodoroViewModel.timerInfo.value = it }
+        } else {
+            if (pomodoroViewModel.counter.value?.rem(60)!! < 10) {
+                "0${(pomodoroViewModel.counter.value?.div(60))}:0${
+                    ((pomodoroViewModel.counter.value?.rem(
+                        60
+                    )))
+                }".also { pomodoroViewModel.timerInfo.value = it }
+            } else {
+                "0${(pomodoroViewModel.counter.value?.div(60))}:${
+                    ((pomodoroViewModel.counter.value?.rem(
+                        60
+                    )))
+                }".also { pomodoroViewModel.timerInfo.value = it }
             }
         }
     }
+
+    private fun checkPermissions(): Boolean {
+        val permissionState = ActivityCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+        return permissionState == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun startLocationPermissionRequest() {
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+            pomodoroViewModel.locationPermissionCode
+        )
+    }
+
+    private fun requestPermissions() {
+        val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(
+            requireActivity(),
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+
+        // Provide an additional rationale to the user. This would happen if the user denied the
+        // request previously, but didn't check the "Don't ask again" checkbox.
+        if (shouldProvideRationale) {
+            Log.i(TAG, "Displaying permission rationale to provide additional context.")
+
+            showSnackbar(
+                R.string.permission_rationale, android.R.string.ok
+            ) {
+                // Request permission
+                startLocationPermissionRequest()
+            }
+
+        } else {
+            Log.i(TAG, "Requesting permission")
+            startLocationPermissionRequest()
+        }
+    }
+
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        Log.i(TAG, "onRequestPermissionResult")
+        if (requestCode == pomodoroViewModel.locationPermissionCode) {
+            if (grantResults.isEmpty()) {
+                // If user interaction was interrupted, the permission request is cancelled and you
+                // receive empty arrays.
+                Log.i(TAG, "User interaction was cancelled.")
+            } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted.
+                getLastLocation()
+            } else {
+                // Permission denied.
+                showSnackbar(R.string.permission_denied_explanation, R.string.settings,
+                    View.OnClickListener {
+                        // Build intent that displays the App settings screen.
+                        val intent = Intent()
+                        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                        val uri = Uri.fromParts(
+                            "package",
+                            BuildConfig.APPLICATION_ID, null
+                        )
+                        intent.data = uri
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                    })
+            }
+        }
+    }
+
     fun getLocation() {
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            pomodoroViewModel.locationPermissionCode
+        )
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            Toast.makeText(requireContext(), "Nemáme přístup k GPS. :(", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                "Nemáme přístup k poloze. Ukončené pomodora nebudou ukazovat polohu. :(",
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
+
         pomodoroViewModel.fusedLocationClient.lastLocation
             .addOnSuccessListener { location ->
                 if (location != null) {
@@ -298,6 +516,68 @@ class PomodoroTimerFragment : Fragment() {
 
             }
     }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        // Updates button states if new while in use location is added to SharedPreferences.
+        if (key == SharedPreferenceUtil.KEY_FOREGROUND_ENABLED) {
+            sharedPreferences?.getBoolean(
+                SharedPreferenceUtil.KEY_FOREGROUND_ENABLED, false
+
+            )
+        }
+    }
+
+    private fun foregroundPermissionApproved(): Boolean {
+        return PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+    }
+
+    private fun requestForegroundPermissions() {
+        val provideRationale = foregroundPermissionApproved()
+
+        // If the user denied a previous request, but didn't check "Don't ask again", provide
+        // additional rationale.
+        if (provideRationale) {
+            Snackbar.make(
+                requireView().findViewById(R.id.pomodoroTimerFragment2),
+                R.string.permission_rationale,
+                Snackbar.LENGTH_LONG
+            )
+                .setAction(R.string.OK) {
+                    // Request permission
+                    ActivityCompat.requestPermissions(
+                        requireActivity(),
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                        REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
+                    )
+                }
+                .show()
+        } else {
+            Log.d(TAG, "Request foreground only permission")
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
+            )
+        }
+    }
+
+
+    private inner class ForegroundOnlyBroadcastReceiver : BroadcastReceiver() {
+
+        override fun onReceive(context: Context, intent: Intent) {
+            val location = intent.getParcelableExtra<Location>(
+                LocationService.EXTRA_LOCATION
+            )
+
+            if (location != null) {
+                Toast.makeText(requireContext(), "Foreground location: ${location.toText()}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
 
 
 }
