@@ -26,6 +26,11 @@ class EditMainTaskActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_main_task)
+        val actionbar = supportActionBar
+        //set actionbar title
+        actionbar!!.title = "Editace hlavního úkolu"
+        //set back button
+        actionbar.setDisplayHomeAsUpEnabled(true)
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_main_task)
         binding.etDateEdit.setOnClickListener {
             showDatePicker()
@@ -79,6 +84,11 @@ class EditMainTaskActivity: AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun showDatePicker(){

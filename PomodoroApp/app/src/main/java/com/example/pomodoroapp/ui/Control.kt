@@ -25,6 +25,9 @@ class Control : AppCompatActivity() {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_control)
 
+            val actionbar = supportActionBar
+            actionbar!!.title = "Pomodoro timer"
+
             val navController = Navigation.findNavController(this, R.id.fragNavHost)
             bottomNavView.setupWithNavController(navController)
 
@@ -32,18 +35,22 @@ class Control : AppCompatActivity() {
                 when (menuItem.itemId) {
                     R.id.myAccountFragment2 -> {
                         navController.navigate(R.id.myAccountFragment2)
+                        actionbar.title = "Účet"
                         return@OnNavigationItemSelectedListener true
                     }
                     R.id.pomodoroTimerFragment2 -> {
                         navController.navigate(R.id.pomodoroTimerFragment2)
+                        actionbar.title = "Pomodoro timer"
                         return@OnNavigationItemSelectedListener true
                     }
                     R.id.mainTasksFragment2 -> {
                         navController.navigate(R.id.mainTasksFragment2)
+                        actionbar.title = "Hlavní úkoly"
                         return@OnNavigationItemSelectedListener true
                     }
                     R.id.minorTasksFragment2 -> {
                         navController.navigate(R.id.minorTasksFragment2)
+                        actionbar.title = "Vedlejší úkoly"
                         return@OnNavigationItemSelectedListener true
                     }
                 }

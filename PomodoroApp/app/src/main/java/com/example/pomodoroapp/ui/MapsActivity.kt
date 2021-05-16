@@ -22,6 +22,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        //set back button
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -33,5 +36,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val point = LatLng(lat, long)
         mMap.addMarker(MarkerOptions().position(point).title("Místo splnění pomodora"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(point))
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }

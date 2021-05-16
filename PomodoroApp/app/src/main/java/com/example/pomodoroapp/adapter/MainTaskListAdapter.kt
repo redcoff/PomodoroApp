@@ -76,7 +76,6 @@ class MainTaskListAdapter(val clickListener: MainTaskListener) :  ListAdapter<Da
             fun from(parent: ViewGroup): TextViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val view = layoutInflater.inflate(R.layout.main_task_header, parent, false)
-                view.text.text = LocalDate.now().toString()
                 return TextViewHolder(view)
             }
         }

@@ -13,6 +13,11 @@ class EditMinorTaskActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_minor_task)
+        val actionbar = supportActionBar
+        //set actionbar title
+        actionbar!!.title = "Editace vedlejšího úkolu"
+        //set back button
+        actionbar.setDisplayHomeAsUpEnabled(true)
 
         etText_minor_task.setText(intent.getStringExtra("taskName"))
         var type: MinorTask.Type?
@@ -68,5 +73,10 @@ class EditMinorTaskActivity: AppCompatActivity() {
 
             finish()
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }

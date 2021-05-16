@@ -2,31 +2,31 @@
     <string name="app_name">PomodoroApp</string>
     <string name="timer_icon">Timer icon</string>
     <string name="start_pomodoro">Spustit pomodoro</string>
-    <string name="minutes">25 minutes</string>
+    <string name="minutes">25 minut</string>
     <string name="user">Uživatel</string>
     <string name="stop_pomodoro">Zastavit pomodoro</string>
     <string name="zapsat_ukol">Zapsat úkol</string>
     <string name="zbyva">Zbývá</string>
     <string name="neodkladn">Neodkladné</string>
     <string name="odkladn">Odkladné</string>
-    <string name="add_task">Add task</string>
+    <string name="add_task">Přidat úkol</string>
     <string name="bad_login">Špatné přihlašovací údaje</string>
     <string name="add_credentials">Vyplňte email a heslo.</string>
     <string name="OK">OK</string>
     <string name="bad_email_format">Špatný formát emailu.</string>
     <string name="login_error">Chyba přihlášení.</string>
-    <string name="main_tasks">Main Tasks</string>
+    <string name="main_tasks">Hlavní úkoly</string>
     <string name="pomodoro">Pomodoro</string>
-    <string name="name_of_the_main_task">Name of the Main Task</string>
-    <string name="task_description">Task Description</string>
-    <string name="date">Date</string>
-    <string name="confirm">Confirm</string>
-    <string name="new_task">New Task</string>
+    <string name="name_of_the_main_task">Název</string>
+    <string name="task_description">Popis</string>
+    <string name="date">Datum</string>
+    <string name="confirm">Vytvořit</string>
+    <string name="new_task">Nový úkol</string>
     <string name="e_mail">E-mail</string>
     <string name="pomodoroapp">PomodoroApp</string>
-    <string name="password">Password</string>
-    <string name="log_in">Log in</string>
-    <string name="back">Back</string>
+    <string name="password">Heslo</string>
+    <string name="log_in">Přihlásit se</string>
+    <string name="back">Zpět</string>
     <string name="neodkladne">Neodkladné</string>
     <string name="info_icon">info_icon</string>
     <string name="n_zev_kolu">Název úkolu</string>
@@ -42,7 +42,6 @@
     <string name="zvolit_hlavn_kol">Hlavní úkol</string>
     <string name="NotifID">Čas běží!</string>
     <string name="snooze">Nejaky snooze</string>
-    <string name="zm_nit_popis_kolu">change_descriptiopn</string>
     <string name="change_description">Změnit popis úkolu</string>
     <string name="change_date">Změnit datum úkolu</string>
     <string name="pomodoros">Počet uplynulých pomodor</string>
@@ -54,5 +53,5 @@
     <string name="zobrazit_na_map_posledn_pomodoro">Zobrazit na mapě poslední pomodoro</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps">Umístění posledního pomodora</string>
 </resources>

@@ -23,6 +23,11 @@ class AddMinorTaskActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_minor_task)
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_add_minor_task)
+        val actionbar = supportActionBar
+        //set actionbar title
+        actionbar!!.title = "Přidat vedlejší úkol"
+        //set back button
+        actionbar.setDisplayHomeAsUpEnabled(true)
         binding.minorTaskTypeButton.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 buttonView.text = "Neodkladné"
@@ -51,5 +56,10 @@ class AddMinorTaskActivity : AppCompatActivity() {
         }
 
         setResult(Activity.RESULT_OK)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }

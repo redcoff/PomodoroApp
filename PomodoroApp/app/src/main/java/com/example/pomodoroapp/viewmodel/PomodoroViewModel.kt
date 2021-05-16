@@ -10,6 +10,7 @@ import com.example.pomodoroapp.utilities.Constants
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ktx.toObject
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -72,28 +73,38 @@ class PomodoroViewModel(application: Application) : BaseViewModel(application)  
         }
     }
 
-    fun updateTaskPomodoro(name: String){
+    fun updateTaskPomodoro(name: String) = viewModelScope.launch {
         firestore.collection(Constants.TASKSCOLLECTION).whereEqualTo("name", name)
             .get().addOnSuccessListener { documents ->
                 for (document in documents) {
-                    var pomodoros = 0
-                    firestore.collection(Constants.TASKSCOLLECTION).document(document.id).get().addOnSuccessListener { documentSnapshot ->
-                        val task = documentSnapshot.toObject<MainTask>()
-                        if (task != null) {
-                            pomodoros = task.pomodoros
+                    viewModelScope.launch {
+                        var pomodoros = 0
+                        val job: Job = viewModelScope.launch {
+                            firestore.collection(Constants.TASKSCOLLECTION).document(document.id)
+                                .get()
+                                .addOnSuccessListener { documentSnapshot ->
+                                    val task = documentSnapshot.toObject<MainTask>()
+                                    if (task != null) {
+                                        pomodoros = task.pomodoros
+                                    }
+                                }.addOnFailureListener { exception ->
+                                    println("Error getting data: $exception")
+                                }.await()
                         }
-                    }.addOnFailureListener{exception ->
-                        println("Error getting data: $exception")
+                        job.join()
+                        pomodoros++
+                        firestore.collection(Constants.TASKSCOLLECTION).document(document.id)
+                            .update("pomodoros", pomodoros)
+                        firestore.collection(Constants.TASKSCOLLECTION).document(document.id)
+                            .update("lat", locationLat)
+                        firestore.collection(Constants.TASKSCOLLECTION).document(document.id)
+                            .update("long", locationLong)
                     }
-                    pomodoros++
-                    firestore.collection(Constants.TASKSCOLLECTION).document(document.id).update("pomodoros",pomodoros)
-                    firestore.collection(Constants.TASKSCOLLECTION).document(document.id).update("lat",locationLat)
-                    firestore.collection(Constants.TASKSCOLLECTION).document(document.id).update("long",locationLong)
                 }
             }
             .addOnFailureListener { exception ->
                 println("Error getting documents: $exception")
-            }
+            }.await()
     }
 
 }

@@ -19,6 +19,11 @@ class RegisterUser: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_user)
+        val actionbar = supportActionBar
+        //set actionbar title
+        actionbar!!.title = "Registrace uživatele"
+        //set back button
+        actionbar.setDisplayHomeAsUpEnabled(true)
         auth = FirebaseAuth.getInstance()
         etPassword.transformationMethod = PasswordTransformationMethod();
         etPassword2.transformationMethod = PasswordTransformationMethod();
@@ -55,6 +60,12 @@ class RegisterUser: AppCompatActivity() {
             }else createAccount(etEmail.text.toString().trim(),etPassword.text.toString().trim())
         }
     }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
 
 
     private fun createAccount(email: String, password: String) {

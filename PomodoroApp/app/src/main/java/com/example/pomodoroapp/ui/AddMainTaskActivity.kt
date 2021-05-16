@@ -25,6 +25,9 @@ class AddMainTaskActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_main_task)
+        val actionbar = supportActionBar
+        actionbar!!.title = "Přidat hlavní úkol"
+        actionbar.setDisplayHomeAsUpEnabled(true)
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_add_main_task)
         binding.etDateInput.setOnClickListener {
             showDatePicker()
@@ -44,6 +47,11 @@ class AddMainTaskActivity : AppCompatActivity() {
             super.onBackPressed();
         }
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
 
