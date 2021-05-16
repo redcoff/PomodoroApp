@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.pomodoroapp.R
@@ -29,9 +30,7 @@ class MyAccountFragment : Fragment() {
     ): View{
         super.onCreateView(inflater, container, savedInstanceState)
         auth = FirebaseAuth.getInstance();
-
         val view: View = inflater.inflate(R.layout.activity_my_account, container, false)
-        println("TEST : " + context?.let { SavedPreference.getUsername(it) } )
         view.textView2.text = context?.let { SavedPreference.getUsername(it) }
         view.textView3.text = context?.let { SavedPreference.getEmail(it) }
         view.logoutButton.setOnClickListener{
@@ -39,6 +38,7 @@ class MyAccountFragment : Fragment() {
             Firebase.auth.signOut()
             context?.let { SavedPreference.setEmail(it,"" ) }
             context?.let { SavedPreference.setUsername(it,"" ) }
+            this.activity?.let { it1 -> finishAffinity(it1) }
             val intent= Intent(activity,LoginActivity::class.java)
             startActivity(intent)
         }

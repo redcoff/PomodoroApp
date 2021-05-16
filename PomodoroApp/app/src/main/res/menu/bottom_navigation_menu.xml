@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/myAccountFragment2"
+        android:enabled="true"
+        android:icon="@drawable/account"
+        android:iconTint="@color/black"
+        android:tint="@color/black"
+        android:title="Účet" />
+
+    <item android:id="@+id/pomodoroTimerFragment2"
+        android:enabled="true"
+        android:icon="@drawable/timer"
+        android:iconTint="@color/black"
+        android:title="Pomodoro" />
+
+    <item android:id="@+id/mainTasksFragment2"
+        android:enabled="true"
+        android:icon="@drawable/main_tasks"
+        android:iconTint="@color/black"
+        android:title="Hlavní úkoly" />
+
+    <item android:id="@+id/minorTasksFragment2"
+        android:enabled="true"
+        android:iconTint="@color/black"
+        android:icon="@drawable/minor_tasks"
+        android:title="Vedlejší úkoly" />
+</menu>

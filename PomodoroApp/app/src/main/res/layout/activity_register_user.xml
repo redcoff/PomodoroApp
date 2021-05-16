@@ -70,7 +70,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tiPassword2"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:hint="@string/password">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPassword2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
             </com.google.android.material.textfield.TextInputLayout>
+
 
             <Button
                 android:id="@+id/btnSubmit"

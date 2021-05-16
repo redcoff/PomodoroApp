@@ -26,8 +26,8 @@
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
-            android:layout_width="363dp"
-            android:layout_height="301dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/minor_task_header"
@@ -35,9 +35,10 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/neodkladne"
-                android:layout_width="400dp"
-                android:layout_height="384dp"
-                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 app:layout_constraintBottom_toTopOf="@+id/mtrl_list_item_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -71,8 +72,8 @@
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView2"
-            android:layout_width="361dp"
-            android:layout_height="333dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/minor_task_header2"
@@ -80,9 +81,10 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/odkladne"
-                android:layout_width="400dp"
-                android:layout_height="384dp"
-                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 app:layout_constraintBottom_toTopOf="@+id/mtrl_list_item_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

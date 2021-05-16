@@ -1,5 +1,6 @@
 package com.example.pomodoroapp.ui.tabs
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +9,8 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pomodoroapp.R
@@ -17,6 +20,8 @@ import com.example.pomodoroapp.databinding.ActivityMainTasksBinding
 import com.example.pomodoroapp.ui.AddMainTaskActivity
 import com.example.pomodoroapp.ui.Control
 import com.example.pomodoroapp.viewmodel.MainTaskViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.activity_control.*
 
 class MainTasksFragment : Fragment() {
 
@@ -41,7 +46,6 @@ class MainTasksFragment : Fragment() {
                 else -> 1
             }
         }
-
         return binding.root
     }
 

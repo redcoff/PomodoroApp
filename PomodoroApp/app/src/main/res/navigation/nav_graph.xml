@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
+    app:startDestination="@id/pomodoroTimerFragment2">
+
+
+    <fragment
+        android:id="@+id/myAccountFragment2"
+        android:name="com.example.pomodoroapp.ui.tabs.MyAccountFragment"
+        android:label="MyAccountFragment" >
+        <action
+            android:id="@+id/action_myAccountFragment2_to_pomodoroTimerFragment2"
+            app:destination="@id/pomodoroTimerFragment2" />
+        <action
+            android:id="@+id/action_myAccountFragment2_to_mainTasksFragment2"
+            app:destination="@id/mainTasksFragment2" />
+        <action
+            android:id="@+id/action_myAccountFragment2_to_minorTasksFragment2"
+            app:destination="@id/minorTasksFragment2" />
+    </fragment>
+
+
+
+    <fragment
+        android:id="@+id/pomodoroTimerFragment2"
+        android:name="com.example.pomodoroapp.ui.tabs.PomodoroTimerFragment"
+        android:label="PomodoroTimerFragment" >
+        <action
+            android:id="@+id/action_pomodoroTimerFragment2_to_myAccountFragment2"
+            app:destination="@id/myAccountFragment2" />
+        <action
+            android:id="@+id/action_pomodoroTimerFragment2_to_mainTasksFragment2"
+            app:destination="@id/mainTasksFragment2" />
+        <action
+            android:id="@+id/action_pomodoroTimerFragment2_to_minorTasksFragment2"
+            app:destination="@id/minorTasksFragment2" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/mainTasksFragment2"
+        android:name="com.example.pomodoroapp.ui.tabs.MainTasksFragment"
+        android:label="MainTasksFragment" >
+        <action
+            android:id="@+id/action_mainTasksFragment2_to_myAccountFragment2"
+            app:destination="@id/myAccountFragment2" />
+        <action
+            android:id="@+id/action_mainTasksFragment2_to_pomodoroTimerFragment2"
+            app:destination="@id/pomodoroTimerFragment2" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/minorTasksFragment2"
+        android:name="com.example.pomodoroapp.ui.tabs.MinorTasksFragment"
+        android:label="MinorTasksFragment" >
+        <action
+            android:id="@+id/action_minorTasksFragment2_to_mainTasksFragment2"
+            app:destination="@id/mainTasksFragment2" />
+        <action
+            android:id="@+id/action_minorTasksFragment2_to_myAccountFragment2"
+            app:destination="@id/myAccountFragment2" />
+        <action
+            android:id="@+id/action_minorTasksFragment2_to_pomodoroTimerFragment2"
+            app:destination="@id/pomodoroTimerFragment2" />
+    </fragment>
+</navigation>

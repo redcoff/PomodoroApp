@@ -12,7 +12,7 @@ data class MainTask(
     val lat: Double = 0.0,
     val long: Double = 0.0
 ){
-    fun getPomodoroFormat(): String {
+    fun pomodoroFormat(): String {
         var format = ""
         for(i in 1..pomodoros){
             format += "|"
