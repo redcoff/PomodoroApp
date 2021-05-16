@@ -50,47 +50,14 @@ class PomodoroTimerFragment : Fragment() {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = DataBindingUtil.inflate(inflater, R.layout.activity_pomodorotimer, container, false)
         pomodoroViewModel.fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-        pomodoroViewModel.timer.value = object : CountDownTimer((pomodoroViewModel.getCurrentStateTime() * 1000).toLong(), 1000) {
+        return binding.root
+    }
 
-            override fun onTick(millisUntilFinished: Long) {
 
-                if(pomodoroViewModel.counter.value?.div(60)!! >=10 ) {
-                    if(pomodoroViewModel.counter.value?.rem(60)!! < 10){
-                        "${(pomodoroViewModel.counter.value?.div(60))}:0${((pomodoroViewModel.counter.value?.rem(
-                            60
-                        )))}".also { pomodoroViewModel.timerInfo.value = it }
-                    }else{
-                        "${(pomodoroViewModel.counter.value?.div(60))}:${((pomodoroViewModel.counter.value?.rem(
-                            60
-                        )))}".also { pomodoroViewModel.timerInfo.value = it }
-                    }
-                }else{
-                    if(pomodoroViewModel.counter.value?.rem(60)!! < 10){
-                        "0${(pomodoroViewModel.counter.value?.div(60))}:0${((pomodoroViewModel.counter.value?.rem(
-                            60
-                        )))}".also { pomodoroViewModel.timerInfo.value = it }
-                    }else{
-                        "0${(pomodoroViewModel.counter.value?.div(60))}:${((pomodoroViewModel.counter.value?.rem(
-                            60
-                        )))}".also { pomodoroViewModel.timerInfo.value = it }
-                    }
-                }
-                pomodoroViewModel.counter.value = pomodoroViewModel.counter.value?.minus(1)
-                pomodoroViewModel.progress.value = 100 - ((millisUntilFinished/(10 * pomodoroViewModel.getCurrentStateTime()))).toInt()
-            }
-            override fun onFinish() {
-                "00:00".also { pomodoroViewModel.timerInfo.value = it }
-                pomodoroViewModel.pomodoroCounter++
-
-                if(!pomodoroViewModel.isBreak){
-                    println( "ascascsacasc" + pomodoroViewModel.progress.value)
-                    createNotification()
-                    pomodoroViewModel.updateTaskPomodoro(pomodoroViewModel.currenttask)
-                }
-                pomodoroViewModel.isBreak = !pomodoroViewModel.isBreak
-            }
-        }
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setBinding()
+        binding.lifecycleOwner = this
 
         binding.startPomodoro.setOnClickListener {
             if (pomodoroViewModel.currenttask == "") {
@@ -108,14 +75,7 @@ class PomodoroTimerFragment : Fragment() {
         }
         pomodoroViewModel.counter.value = pomodoroViewModel.getCurrentStateTime()
 
-        return binding.root
-    }
 
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setBinding()
-        binding.lifecycleOwner = this
     }
 
 
@@ -187,16 +147,24 @@ class PomodoroTimerFragment : Fragment() {
                 pomodoroViewModel.counter.value = pomodoroViewModel.getCurrentStateTime()
                 when {
                     pomodoroViewModel.getCurrentStateTime() == POMODOROTIME -> {
-                        faze.text = "Práce"
+                        faze?.let{
+                            it.text = "Práce"
+                        }
                     }
                     pomodoroViewModel.getCurrentStateTime() == BREAKTIME -> {
-                        faze.text = "Přestávka"
+                        faze?.let{
+                            it.text = "Přestávka"
+                        }
                     }
                     else -> {
-                        faze.text = "Dlouhá Přestávka"
+                        faze?.let{
+                            it.text = "Dlouhá přestávka"
+                        }
                     }
                 }
-                faze.visibility = View.VISIBLE
+                faze?.let{
+                    it.visibility = View.VISIBLE
+                }
                 val t = Toast.makeText(requireContext(),"Pomodoro dokončeno, čas na přestávku.", Toast.LENGTH_LONG)
                 t.show()
             }
@@ -217,19 +185,29 @@ class PomodoroTimerFragment : Fragment() {
             pomodoroViewModel.startPomodoroVisibility.value = 8
             when {
                 pomodoroViewModel.getCurrentStateTime() == POMODOROTIME -> {
-                    faze.text = "Práce"
+                    faze?.let {
+                     it.text = "Práce"
+                    }
                 }
                 pomodoroViewModel.getCurrentStateTime() == BREAKTIME -> {
-                    faze.text = "Přestávka"
+                    faze?.let {
+                        it.text = "Přestávka"
+                    }
                 }
                 else -> {
-                    faze.text = "Dlouhá Přestávka"
+                    faze?.let {
+                        it.text = "Dlouhá Přestávka"
+                    }
                 }
             }
-            faze.visibility = View.VISIBLE
+
+            faze?.let{
+                it.visibility = View.VISIBLE
+            }
 
         }
     }
+
 
     private fun cancelPomodoro(){
         pomodoroViewModel.progress.value = 0
