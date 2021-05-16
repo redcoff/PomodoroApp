@@ -1,9 +1,11 @@
 package com.example.pomodoroapp.ui
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.databinding.DataBindingUtil
 import com.example.pomodoroapp.R
 import com.example.pomodoroapp.databinding.ActivityEditMainTaskBinding
@@ -61,6 +63,22 @@ class EditMainTaskActivity: AppCompatActivity() {
             editMainTaskViewModel.deleteTask(editMainTaskViewModel.taskNameOld)
             finish()
         }
+
+        editMainTaskViewModel.lat.observe(this) {
+            if(editMainTaskViewModel.lat.value != 0.0 && editMainTaskViewModel.lat.value != 0.0) {
+                binding.showTaskMap.text = "Zobrazit poslední pomodoro na mapě"
+                binding.showTaskMap.isEnabled = true
+                binding.showTaskMap.isClickable = true
+
+                binding.showTaskMap.setOnClickListener {
+                    val intent = Intent(this, MapsActivity::class.java)
+                    intent.putExtra("lat", editMainTaskViewModel.lat.value)
+                    intent.putExtra("long", editMainTaskViewModel.long.value)
+                    startActivity(intent)
+                }
+            }
+        }
+
     }
 
     private fun showDatePicker(){

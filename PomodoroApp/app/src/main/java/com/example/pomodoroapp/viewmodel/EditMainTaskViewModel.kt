@@ -18,6 +18,8 @@ class EditMainTaskViewModel  (application: Application) : BaseViewModel(applicat
     var description = MutableLiveData<String>("")
     var date = MutableLiveData<Date>(null)
     var pomodoros = MutableLiveData<String>("")
+    var lat = MutableLiveData<Double>(0.0)
+    var long = MutableLiveData<Double>(0.0)
 
 
 
@@ -58,12 +60,10 @@ class EditMainTaskViewModel  (application: Application) : BaseViewModel(applicat
                         val task = documentSnapshot.toObject<MainTask>()
                         if (task != null) {
                             description.value = task.description
-                        }
-                        if (task != null) {
                             date.value = task.date?.toDate()
-                        }
-                        if (task != null) {
                             pomodoros.value = task.pomodoroFormat()
+                            lat.value = task.lat
+                            long.value = task.long
                         }
                     }
 

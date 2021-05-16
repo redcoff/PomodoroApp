@@ -52,4 +52,7 @@
     <string name="upravit_kol">Upravit úkol</string>
     <string name="pokra_ovat">Pokračovat</string>
     <string name="zobrazit_na_map_posledn_pomodoro">Zobrazit na mapě poslední pomodoro</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

@@ -49,6 +49,7 @@ class PomodoroTimerFragment : Fragment() {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = DataBindingUtil.inflate(inflater, R.layout.activity_pomodorotimer, container, false)
+        pomodoroViewModel.fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         pomodoroViewModel.timer.value = object : CountDownTimer((pomodoroViewModel.getCurrentStateTime() * 1000).toLong(), 1000) {
 
             override fun onTick(millisUntilFinished: Long) {

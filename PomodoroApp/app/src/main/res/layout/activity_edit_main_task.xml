@@ -119,7 +119,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:text="@string/zobrazit_na_map_posledn_pomodoro"
+                android:text="Pro zobrazení na mapě splňte alespoň 1 pomodoro"
+                android:enabled="false"
+                android:clickable="false"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/etPomodoros" />
 
