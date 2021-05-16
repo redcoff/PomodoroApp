@@ -21,8 +21,6 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -30,6 +28,7 @@ import com.example.pomodoroapp.R
 import com.example.pomodoroapp.databinding.ActivityPomodorotimerBinding
 import com.example.pomodoroapp.ui.AddMinorTaskActivity
 import com.example.pomodoroapp.ui.LoginActivity
+import com.example.pomodoroapp.utilities.Constants
 import com.example.pomodoroapp.utilities.Constants.BREAKTIME
 import com.example.pomodoroapp.utilities.Constants.POMODOROTIME
 import com.example.pomodoroapp.viewmodel.PomodoroViewModel
@@ -73,9 +72,7 @@ class PomodoroTimerFragment : Fragment() {
         binding.zapsatUkol.setOnClickListener {
             startActivity(Intent(requireContext(), AddMinorTaskActivity::class.java))
         }
-        pomodoroViewModel.counter.value = pomodoroViewModel.getCurrentStateTime()
-
-
+        pomodoroViewModel.counter.value = POMODOROTIME
     }
 
 
@@ -130,13 +127,12 @@ class PomodoroTimerFragment : Fragment() {
                 setTimer()
                 pomodoroViewModel.counter.value = pomodoroViewModel.counter.value?.minus(1)
                 pomodoroViewModel.progress.value = 100 - ((millisUntilFinished/(10 * pomodoroViewModel.getCurrentStateTime()))).toInt()
-
-                println("milis="+ millisUntilFinished + "progress="+pomodoroViewModel.progress.value + "MAX="+pomodoroViewModel.getCurrentStateTime() )
             }
             override fun onFinish() {
                 "00:00".also { pomodoroViewModel.timerInfo.value = it }
-                pomodoroViewModel.pomodoroCounter++
+
                 pomodoroViewModel.progress.value=100
+                pomodoroViewModel.pomodoroCounter++
 
                 if(!pomodoroViewModel.isBreak){
                     getLocation()
@@ -162,6 +158,7 @@ class PomodoroTimerFragment : Fragment() {
                         }
                     }
                 }
+
                 faze?.let{
                     it.visibility = View.VISIBLE
                 }

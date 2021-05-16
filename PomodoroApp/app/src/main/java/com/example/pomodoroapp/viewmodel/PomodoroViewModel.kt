@@ -22,7 +22,7 @@ class PomodoroViewModel(application: Application) : BaseViewModel(application)  
 
     var currenttask : String = ""
     var isBreak = false
-    var pomodoroCounter = 0
+    var pomodoroCounter = 1
 
     //0 - visible
     //8 - gone
@@ -61,15 +61,28 @@ class PomodoroViewModel(application: Application) : BaseViewModel(application)  
 
     // full pomodoro time (25 min) or break (5 min) or full break (30 min)
     fun getCurrentStateTime(): Int {
-        if(isBreak && pomodoroCounter == 4){
-            return Constants.FULLBREAKTIME
+        println(pomodoroCounter)
+        return when {
+            pomodoroCounter % 8 == 0 && pomodoroCounter > 1 -> {
+                Constants.FULLBREAKTIME
+            }
+            pomodoroCounter % 2 == 0 -> {
+                Constants.BREAKTIME
+            }
+            else -> {
+                Constants.POMODOROTIME
+            }
         }
-        if(isBreak){
-            return Constants.BREAKTIME
-        }
-        else {
-            return Constants.POMODOROTIME
-        }
+//        if(pomodoroCounter % 4 == 0 && pomodoroCounter > 1){
+//            isBreak = false
+//            println("IM HERE")
+//            return Constants.FULLBREAKTIME
+//        }
+//        return if(isBreak){
+//            Constants.BREAKTIME
+//        } else {
+//            Constants.POMODOROTIME
+//        }
     }
 
     fun updateTaskPomodoro(name: String){
