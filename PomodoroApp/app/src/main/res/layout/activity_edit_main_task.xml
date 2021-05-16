@@ -115,6 +115,15 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/showTaskMap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="@string/zobrazit_na_map_posledn_pomodoro"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/etPomodoros" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/deleteMinorTask"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

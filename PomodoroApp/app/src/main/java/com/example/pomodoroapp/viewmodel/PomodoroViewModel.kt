@@ -1,11 +1,13 @@
 package com.example.pomodoroapp.viewmodel
 
 import android.app.Application
+import android.location.LocationManager
 import android.os.CountDownTimer
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.pomodoroapp.model.MainTask
 import com.example.pomodoroapp.utilities.Constants
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ktx.toObject
 import kotlinx.coroutines.launch
@@ -30,6 +32,13 @@ class PomodoroViewModel(application: Application) : BaseViewModel(application)  
     var startPomodoroVisibility = MutableLiveData<Int>(0)
 
     var _allTasks = MutableLiveData<List<MainTask>>()
+
+    //Location
+    lateinit var locationManager: LocationManager
+    lateinit var fusedLocationClient: FusedLocationProviderClient
+    var locationLat: Double = 0.0
+    var locationLong: Double = 0.0
+    val locationPermissionCode = 2
 
 
 
@@ -73,8 +82,13 @@ class PomodoroViewModel(application: Application) : BaseViewModel(application)  
                         if (task != null) {
                             pomodoros = task.pomodoros
                         }
+                    }.addOnFailureListener{exception ->
+                        println("Error getting data: $exception")
                     }
-                    firestore.collection(Constants.TASKSCOLLECTION).document(document.id).update("pomodoros",pomodoros+1)
+                    pomodoros++
+                    firestore.collection(Constants.TASKSCOLLECTION).document(document.id).update("pomodoros",pomodoros)
+                    firestore.collection(Constants.TASKSCOLLECTION).document(document.id).update("lat",locationLat)
+                    firestore.collection(Constants.TASKSCOLLECTION).document(document.id).update("long",locationLong)
                 }
             }
             .addOnFailureListener { exception ->

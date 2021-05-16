@@ -9,6 +9,8 @@ data class MainTask(
     val pomodoros:Int = 0,
     val description:String = "",
     val date:Timestamp? = null,
+    val lat: Double = 0.0,
+    val long: Double = 0.0
 ){
     fun getPomodoroFormat(): String {
         var format = ""

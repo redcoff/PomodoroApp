@@ -50,4 +50,5 @@
     <string name="popis_kolu">Popis úkolu</string>
     <string name="smazat_kol">Smazat úkol</string>
     <string name="upravit_kol">Upravit úkol</string>
+    <string name="zobrazit_na_map_posledn_pomodoro">Zobrazit na mapě poslední pomodoro</string>
 </resources>
