@@ -31,20 +31,21 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".ui.Control" />
-        <activity android:name=".ui.LoginActivity">
+        <activity android:name=".ui.Control" android:screenOrientation="portrait" />
+        <activity android:name=".ui.LoginActivity" android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.AddMainTaskActivity" />
-        <activity android:name=".ui.AddMinorTaskActivity" />
-        <activity android:name=".ui.RegisterUser" />
-        <activity android:name=".ui.EditMinorTaskActivity" />
-        <activity android:name=".ui.EditMainTaskActivity" />
+        <activity android:name=".ui.AddMainTaskActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.AddMinorTaskActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.RegisterUser" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.EditMinorTaskActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.EditMainTaskActivity" android:screenOrientation="portrait"/>
         <activity android:name=".ui.MapsActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_maps"/>
     </application>
 

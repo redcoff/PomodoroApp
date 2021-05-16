@@ -5,5 +5,5 @@ object Constants {
     const val MINORTASKS = "minorTasks"
     const val POMODOROTIME = 3
     const val BREAKTIME = 5
-    const val FULLBREAKTIME = 3 * 60
+    const val FULLBREAKTIME =  60
 }
